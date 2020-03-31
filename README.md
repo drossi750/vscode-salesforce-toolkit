@@ -38,6 +38,4 @@ Info & Actions available:
 
 **Enjoy!**
 
-Author: drossi750@gmail.com
-
 Icons made by [Smashicons](https://www.flaticon.com/authors/smashicons) from [www.flaticon.com](https://www.flaticon.com/)
