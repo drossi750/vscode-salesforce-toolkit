@@ -7,6 +7,10 @@
 		"name": "Davide Rossi",
 		"email": "drossi750@gmail.com"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/drossi750/vscode-salesforce-toolkit.git"
+	},
 	"icon": "media/cloud-computing.png",
 	"galleryBanner": {
 		"color": "#007acc",
