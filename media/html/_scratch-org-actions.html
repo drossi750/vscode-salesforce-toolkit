@@ -1,0 +1,27 @@
+<hr style="margin-top: 15px" />
+<div class="container">
+    <span class="inline-block">
+        <span class="top-label">Scratch Org actions</span>
+        <button class="button" onclick="executeCommand('delete');">🗑 Delete Org</button>&nbsp;
+        <button class="button" onclick="sourceCommand('deploy');">⬆ Deploy source</button>&nbsp;
+        <button class="button" onclick="sourceCommand('retrieve');">⬇ Retrieve source</button>&nbsp;
+    </span>
+    <span class="inline-block left-margin">
+        <span class="top-label">Source options</span>
+        <span class="inline-block">
+            <div class="switch-field">
+                <input type="radio" id="radio-standard" name="sourceOptions" value="standard" checked />
+                <label for="radio-standard">Standard</label>
+                <input type="radio" id="radio-overwrite" name="sourceOptions" value="overwrite" />
+                <label for="radio-overwrite">Overwrite Conflicts</label>
+            </div>
+        </span>
+    </span>
+</div>
+
+<script>
+    function sourceCommand(command) {
+        var sourceOverwrite = document.querySelector('input[name="sourceOptions"]:checked').value;
+        vscode.postMessage({ command: command, overwrite: sourceOverwrite });
+    }
+</script>

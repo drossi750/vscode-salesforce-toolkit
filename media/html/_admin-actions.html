@@ -1,0 +1,14 @@
+<hr style="margin-top: 15px" />
+<div class="container">
+    <span class="inline-block">
+        <span class="top-label">Advanced Actions (require System Administrator profile)</span>
+        <button class="button" onclick="adminCommand('runLocalTests');">✅ Run Unit Tests</button>&nbsp;
+        <button class="button" onclick="adminCommand('deploySpecific');">⬆ Deploy source</button>&nbsp;
+    </span>
+</div>
+
+<script>
+    function adminCommand(command) {
+        vscode.postMessage({ command: command });
+    }
+</script>

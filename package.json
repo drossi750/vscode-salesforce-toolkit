@@ -1,0 +1,209 @@
+{
+	"name": "vscode-salesforce-toolkit",
+	"publisher": "drossi750",
+	"displayName": "Salesforce Toolkit",
+	"description": "Visual Studio Code plugin for Salesforce Projects.",
+	"author": {
+		"name": "Davide Rossi",
+		"email": "drossi750@gmail.com"
+	},
+	"icon": "media/cloud-computing.png",
+	"galleryBanner": {
+		"color": "#007acc",
+		"theme": "dark"
+	},
+	"version": "1.0.0",
+	"engines": {
+		"vscode": "^1.40.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"workspaceContains:force-app/"
+	],
+	"main": "./dist/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "sftk.createScratch",
+				"title": "New",
+				"view": "org-explorer",
+				"icon": {
+					"light": "media/plus.png",
+					"dark": "media/plus.png"
+				}
+			},
+			{
+				"command": "sftk.refreshExplorer",
+				"title": "Refresh",
+				"view": "org-explorer",
+				"icon": {
+					"light": "media/refresh.png",
+					"dark": "media/refresh.png"
+				}
+			},
+			{
+				"command": "sftk.createScratchPalette",
+				"title": "SFTK: Create Scratch-Org"
+			},
+			{
+				"command": "sftk.purgeExpiredScratchOrgs",
+				"title": "SFTK: Purge Expired Scratch-Orgs"
+			},
+			{
+				"command": "sftk.setDevHub",
+				"view": "org-explorer",
+				"title": "Select DevHub",
+				"icon": {
+					"light": "media/star.png",
+					"dark": "media/star.png"
+				}
+			},
+			{
+				"command": "sftk.setScratch",
+				"view": "org-explorer",
+				"title": "Select Scratch Org",
+				"icon": {
+					"light": "media/star.png",
+					"dark": "media/star.png"
+				}
+			},
+			{
+				"command": "sftk.openOrg",
+				"view": "org-explorer",
+				"title": "Open Org in the default browser",
+				"icon": {
+					"light": "media/open.png",
+					"dark": "media/open.png"
+				}
+			},
+			{
+				"command": "sftk.openOrgSetup",
+				"view": "org-explorer",
+				"title": "Open Org Setup in the default browser",
+				"icon": {
+					"light": "media/gear.png",
+					"dark": "media/gear.png"
+				}
+			},
+			{
+				"command": "sftk.deleteScratch",
+				"view": "org-explorer",
+				"title": "Delete",
+				"icon": {
+					"light": "media/delete.png",
+					"dark": "media/delete.png"
+				}
+			},
+			{
+				"command": "sftk.deleteScratchPalette",
+				"title": "SFTK: Delete Scratch-Org"
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "org-explorer",
+					"title": "Explorer",
+					"icon": "media/logo.png"
+				}
+			]
+		},
+		"views": {
+			"org-explorer": [
+				{
+					"id": "connected-orgs",
+					"name": "Orgs",
+					"when": "sftkEnabled"
+				}
+			]
+		},
+		"menus": {
+			"view/title": [
+				{
+					"command": "sftk.createScratch",
+					"when": "view == connected-orgs",
+					"group": "navigation"
+				},
+				{
+					"command": "sftk.refreshExplorer",
+					"when": "view == connected-orgs",
+					"group": "navigation"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "sftk.setScratch",
+					"when": "viewItem == scratch",
+					"group": "inline"
+				},
+				{
+					"command": "sftk.openOrg",
+					"group": "inline"
+				},
+				{
+					"command": "sftk.openOrgSetup",
+					"group": "inline"
+				},
+				{
+					"command": "sftk.deleteScratch",
+					"when": "viewItem == scratch || viewItem == scratch.selected",
+					"group": "inline"
+				},
+				{
+					"command": "sftk.setDevHub",
+					"when": "viewItem == devhub",
+					"group": "inline"
+				}
+			]
+		},
+		"configuration": {
+			"title": "Salesforce Toolkit",
+			"properties": {
+				"sftk.scratchOrgTimeoutOnCreate": {
+					"type": "integer",
+					"default": 5,
+					"description": "Specifies the timeout to use when creating a scratch org, in minutes. Default set to 5."
+				},
+				"sftk.showExpiredScratchOrgs": {
+					"type": "boolean",
+					"default": false,
+					"description": "Show also expired scratch orgs in the explorer"
+				},
+				"sftk.enableSysAdminActions": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enable advanced actions, require System Administrator access to the target orgs (experimental)"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "webpack --mode production --info-verbosity verbose",
+		"compile": "webpack --mode none --info-verbosity verbose",
+		"watch": "webpack --mode development --watch --info-verbosity verbose",
+		"test-compile": "tsc -p ./"
+	},
+	"dependencies": {
+		"copy-webpack-plugin": "^5.1.1",
+		"file-loader": "^6.0.0",
+		"request": "^2.88.0"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^5.2.7",
+		"@types/node": "^12.11.7",
+		"@types/vscode": "^1.40.0",
+		"glob": "^7.1.5",
+		"mocha": "^6.2.2",
+		"renderjson": "^1.4.0",
+		"request": "^2.88.0",
+		"ts-loader": "^6.2.2",
+		"tslint": "^5.20.0",
+		"typescript": "^3.6.4",
+		"vscode-test": "^1.2.2",
+		"webpack": "^4.42.1",
+		"webpack-cli": "^3.3.11"
+	}
+}

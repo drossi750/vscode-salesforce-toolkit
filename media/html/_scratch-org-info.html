@@ -1,0 +1,23 @@
+<tr>
+    <td>Source Snapshot</td>
+    <td>${sourceSnapshot}</td>
+    <td>Expiration Date</td>
+    <td>${orgInfo.expirationDate}</td>
+</tr>
+<tr>
+    <td>Instance URL</td>
+    <td>${orgInfo.instanceUrl}</td>
+    <td>Status</td>
+    <td>${expirationStatus}</td>
+</tr>
+<tr>
+    <td>Quick Access Link</td>
+    <td colspan="3">
+        <span class="hidden wrapit" id="accessLink">
+            <textarea class="input-field text-left" readonly rows="3" cols="80" id="accessLinkTextArea"></textarea>
+            <br />
+            <button class="button" onclick="copyToClipboard('#accessLinkTextArea');">📋 Copy to Clipboard</button>
+        </span>
+        <span id="showAccessLinkButton"><button class="button" onclick="retrieveAccessLink();">👁 Show</button></span>
+    </td>
+</tr>

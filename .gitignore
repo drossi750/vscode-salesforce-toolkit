@@ -1,0 +1,5 @@
+*.vsix
+*.swp
+out/
+dist/
+node_modules/

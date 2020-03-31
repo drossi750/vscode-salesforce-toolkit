@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Org ID ${orgInfo.orgId}</title>
+    <link rel="stylesheet" href="${cssFile}" />
+    <script type="text/javascript" src="${renderjsonFile}"></script>
+</head>
+
+<body>
+    <span class="spacer">&nbsp;</span>
+    <details open>
+        <summary>
+            <h3>Org Details</h3>
+            <span class="control-icon control-icon-expand" width="24" height="24" role="presentation">
+                <h3>▼</h3>
+            </span>
+            <span class="control-icon control-icon-close" width="24" height="24" role="presentation">
+                <h3>▲</h3>
+            </span>
+        </summary>
+        <span>
+            <table cellpadding="10" cellspacing="0">
+                <tr>
+                    <td>Org ID</td>
+                    <td>${orgInfo.orgId}</td>
+                    <td>Type</td>
+                    <td><span class="${orgLabelClass}">${orgType}</span></td>
+                </tr>
+                <tr>
+                    <td>Release</td>
+                    <td>
+                        <span class="label-blue" id="orgRelease">Loading...</span>
+                    </td>
+                    <td>API Version</td>
+                    <td>
+                        <span class="label-blue" id="apiVersion">
+                            <span class="inline-block loader">Loading...</span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Username</td>
+                    <td>${orgInfo.username}</td>
+                    <td>Alias</td>
+                    <td>
+                        <input type="text" value="${orgInfo.alias}" class="input-field text-left" id="orgAlias" />&nbsp;
+                        <button class="button" onclick="setAlias()">💾</button>
+                    </td>
+                </tr>
+                ${scratchOrgInfoFragment}
+                <tr>
+                    <td>Access&nbsp;Token:&nbsp;</td>
+                    <td colspan="3">
+                        <span class="hidden wrapit" id="accessToken">
+                            <textarea class="input-field text-left" readonly rows="5" cols="80"
+                                id="accessTokenTextArea">${orgInfo.accessToken}</textarea>
+                            <br />
+                            <button class="button" onclick="copyToClipboard('#accessTokenTextArea');">📋 Copy to
+                                Clipboard</button>
+                        </span>
+                        <span id="showTokenButton"><button class="button" onclick="showAccessToken();">👁
+                                Show</button></span>
+                    </td>
+                </tr>
+            </table>
+        </span>
+    </details>
+    <details open>
+        <summary>
+            <h3>Actions</h3>
+            <span class="control-icon control-icon-expand" width="24" height="24" role="presentation">
+                <h3>▼</h3>
+            </span>
+            <span class="control-icon control-icon-close" width="24" height="24" role="presentation">
+                <h3>▲</h3>
+            </span>
+        </summary>
+        <span>
+            <div class="container">
+                <span class="inline-block">
+                    <span class="top-label">Standard Org Actions</span>
+                    <span class="inline-block">
+                        <button class="button" onclick="executeCommand('open');">🌐 Open</button>&nbsp;
+                        <button class="button" onclick="executeCommand('setup');">⚙️ Setup</button>&nbsp;
+                        <button class="button" onclick="executeCommand('deploymentStatus');">☁ Deployment
+                            Status</button>&nbsp;
+                        <button class="button" onclick="executeCommand('logout');">✘ Logout</button>&nbsp;
+                    </span>
+                </span>
+            </div>
+            ${scratchOrgActionsFragment}
+            ${adminActionsFragment}
+        </span>
+    </details>
+
+    <!-- START of SOQL Query block-->
+    <details>
+        <summary>
+            <h3>SOQL Query</h3>
+            <span class="control-icon control-icon-expand" width="24" height="24" role="presentation">
+                <h3>▼</h3>
+            </span>
+            <span class="control-icon control-icon-close" width="24" height="24" role="presentation">
+                <h3>▲</h3>
+            </span>
+        </summary>
+        <span>
+            <div class="container">
+                <span class="inline-block">
+                    <span class="top-label">Output format</span>
+                    <div class="switch-field">
+                        <input type="radio" id="radio-json" name="queryOutput" value="json" />
+                        <label for="radio-json">JSON</label>
+                        <input type="radio" id="radio-csv" name="queryOutput" value="csv" />
+                        <label for="radio-csv">CSV</label>
+                        <input type="radio" id="radio-text" name="queryOutput" value="human" checked />
+                        <label for="radio-text">Text</label>
+                    </div>
+                </span>
+                <span class="inline-block left-margin">
+                    <span class="top-label">Limit</span>
+                    <span class="inline-block">
+                        <input type="text" id="queryLimit" name="queryLimit" value="50" class="input-field" size="8" />
+                    </span>
+                </span>
+            </div>
+            <div class="container">
+                <span class="inline-block">
+                    <span class="top-label">SOQL Query</span>
+                    <textarea class="input-field text-left" rows="15" cols="80" id="queryTextArea"></textarea><br />
+                    <button class="button" onclick="executeQuery('#queryTextArea', '#queryResultsTextArea');">⚡
+                        Execute</button>
+                </span>
+                <span class="inline-block">
+                    <span class="top-label">Results</span>
+                    <textarea class="input-field text-left" readonly rows="15" cols="80"
+                        id="queryResultsTextArea"></textarea><br />
+                    <button class="button" onclick="copyToClipboard('#queryResultsTextArea');">📋 Copy to
+                        Clipboard</button>
+                </span>
+            </div>
+        </span>
+    </details>
+    <!-- END of Query Executor block-->
+
+    <!-- START of REST API block-->
+    <details ${restApiSection}>
+        <summary>
+            <h3>REST API</h3>
+            <span class="control-icon control-icon-expand" width="24" height="24" role="presentation">
+                <h3>▼</h3>
+            </span>
+            <span class="control-icon control-icon-close" width="24" height="24" role="presentation">
+                <h3>▲</h3>
+            </span>
+        </summary>
+        <span>
+            <div class="container">
+                <span class="inline-block">
+                    <span class="top-label">Method</span>
+                    <div class="switch-field">
+                        <input type="radio" id="radio-get" name="restMethod" value="GET" onclick="hideRestBody()"
+                            checked />
+                        <label for="radio-get">GET</label>
+                        <input type="radio" id="radio-post" name="restMethod" value="POST" onclick="showRestBody()" />
+                        <label for="radio-post">POST</label>
+                        <input type="radio" id="radio-put" name="restMethod" value="PUT" onclick="showRestBody()" />
+                        <label for="radio-put">PUT</label>
+                        <input type="radio" id="radio-patch" name="restMethod" value="PATCH" onclick="showRestBody()" />
+                        <label for="radio-patch">PATCH</label>
+                        <input type="radio" id="radio-delete" name="restMethod" value="DELETE"
+                            onclick="hideRestBody()" />
+                        <label for="radio-delete">DELETE</label>
+                    </div>
+                </span>
+                <span class="inline-block left-margin">
+                    <span class="top-label">URL</span>
+                    <span class="inline-block">
+                        <input type="text" id="restCallUrl" name="restCallUrl" value="" class="input-field text-left"
+                            size="40" />
+                    </span>
+                </span>
+                <span class=" inline-block left-margin">
+                    <span class="inline-block">
+                        <button class="button" onclick="executeRestCall();">⚡ Execute</button>&nbsp;
+                        <button class="button" onclick="clearRestResults();">🗑 Clear Results</button>
+                    </span>
+                </span>
+            </div>
+            <div class="container hidden" id="restBody">
+                <span class="inline-block">
+                    <span class="top-label">Body</span>
+                    <textarea class="input-field text-left hidden" rows="15" cols="80" id="restBodyTextArea"></textarea>
+                </span>
+            </div>
+            <div class="container">
+                <span class="inline-block">
+                    <span class="top-label hidden" id="restResultsLabel">Results</span>
+                    <div id="restResults" class="json-explorer"></div>
+                </span>
+            </div>
+        </span>
+    </details>
+    <!-- END of REST API block-->
+    <script async type="text/javascript" src="${jsFile}" />
+    </body>
+</html>
