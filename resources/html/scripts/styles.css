@@ -1,3 +1,22 @@
+/**
+ * Copyright (C) 2020 Davide Rossi
+ * 
+ * This file is part of vscode-salesforce-toolkit.
+ * 
+ * vscode-salesforce-toolkit is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * vscode-salesforce-toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with vscode-salesforce-toolkit.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 :root {
   --green-label-background: #a5dc86;
   --green-label-foreground: rgba(0, 0, 0, 0.6);
@@ -92,6 +111,13 @@ input.auto-width {
 .hidden {
   display: none;
   visibility: hidden;
+}
+
+.fullsize {
+  width: 98%;
+  height: 98%;
+  min-width: 98%;
+  min-height: 98%;
 }
 
 /* Switch Field Styles */
@@ -324,6 +350,7 @@ details[disabled] {
 div.json-explorer {
   padding: 10px;
 }
+
 .renderjson a              { text-decoration: none; }
 .renderjson .disclosure    { color: var(--vscode-textPreformat-foreground); font-size: 150%; }
 .renderjson .syntax        { color: var(--vscode-textPreformat-foreground); }
@@ -335,3 +362,4 @@ div.json-explorer {
 .renderjson .object.syntax { color: var(--vscode-textSeparator-foreground); }
 .renderjson .array.syntax  { color: var(--vscode-textSeparator-foreground); }
 .renderjson ::selection    { background-color: var(--vscode-editor-foreground);  color: var(--vscode-editor-background);}
+

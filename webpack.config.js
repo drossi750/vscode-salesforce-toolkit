@@ -62,7 +62,7 @@ const config = {
     }
     /*,plugins: [
         new CopyWebpackPlugin([
-            { from: 'media', to: 'media' }
+            { from: 'resources', to: 'resources' }
         ])
     ]*/
 };

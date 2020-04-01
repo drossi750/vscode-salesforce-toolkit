@@ -2,7 +2,7 @@
 	"name": "vscode-salesforce-toolkit",
 	"publisher": "drossi750",
 	"displayName": "Salesforce Toolkit",
-	"description": "Visual Studio Code plugin for Salesforce Projects.",
+	"description": "Salesforce DX utilities for developers",
 	"author": {
 		"name": "Davide Rossi",
 		"email": "drossi750@gmail.com"
@@ -11,7 +11,7 @@
 		"type": "git",
 		"url": "https://github.com/drossi750/vscode-salesforce-toolkit.git"
 	},
-	"icon": "media/cloud-computing.png",
+	"icon": "resources/cloud-computing.png",
 	"galleryBanner": {
 		"color": "#007acc",
 		"theme": "dark"
@@ -34,8 +34,8 @@
 				"title": "New",
 				"view": "org-explorer",
 				"icon": {
-					"light": "media/plus.png",
-					"dark": "media/plus.png"
+					"light": "resources/plus.png",
+					"dark": "resources/plus.png"
 				}
 			},
 			{
@@ -43,8 +43,8 @@
 				"title": "Refresh",
 				"view": "org-explorer",
 				"icon": {
-					"light": "media/refresh.png",
-					"dark": "media/refresh.png"
+					"light": "resources/refresh.png",
+					"dark": "resources/refresh.png"
 				}
 			},
 			{
@@ -60,8 +60,8 @@
 				"view": "org-explorer",
 				"title": "Select DevHub",
 				"icon": {
-					"light": "media/star.png",
-					"dark": "media/star.png"
+					"light": "resources/star.png",
+					"dark": "resources/star.png"
 				}
 			},
 			{
@@ -69,8 +69,8 @@
 				"view": "org-explorer",
 				"title": "Select Scratch Org",
 				"icon": {
-					"light": "media/star.png",
-					"dark": "media/star.png"
+					"light": "resources/star.png",
+					"dark": "resources/star.png"
 				}
 			},
 			{
@@ -78,8 +78,8 @@
 				"view": "org-explorer",
 				"title": "Open Org in the default browser",
 				"icon": {
-					"light": "media/open.png",
-					"dark": "media/open.png"
+					"light": "resources/open.png",
+					"dark": "resources/open.png"
 				}
 			},
 			{
@@ -87,8 +87,8 @@
 				"view": "org-explorer",
 				"title": "Open Org Setup in the default browser",
 				"icon": {
-					"light": "media/gear.png",
-					"dark": "media/gear.png"
+					"light": "resources/gear.png",
+					"dark": "resources/gear.png"
 				}
 			},
 			{
@@ -96,8 +96,8 @@
 				"view": "org-explorer",
 				"title": "Delete",
 				"icon": {
-					"light": "media/delete.png",
-					"dark": "media/delete.png"
+					"light": "resources/delete.png",
+					"dark": "resources/delete.png"
 				}
 			},
 			{
@@ -110,7 +110,7 @@
 				{
 					"id": "org-explorer",
 					"title": "Explorer",
-					"icon": "media/logo.png"
+					"icon": "resources/logo.png"
 				}
 			]
 		},

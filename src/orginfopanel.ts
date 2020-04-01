@@ -17,12 +17,12 @@
 
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { getExtensionPath, getWorkspaceRoot, promptAndShowErrorLog, promptAndShowInfoLog, refreshOrgList, setScratch, executeLocalTests, executeDeployment } from './extension';
+import * as utilities from './utilities';
+import { getExtensionPath, refreshOrgList, setScratch, executeLocalTests, executeDeployment } from './extension';
 import { getContext, getOrgDataProvider } from './extension';
 import { OrgInfo, UserDetailResult, ErrorStatus, ReleaseVersionResult } from './interfaces';
-import { loggingChannel } from './extension';
-import { readFileSync } from 'fs';
 import { window, ProgressLocation } from 'vscode';
+import { loadFromTemplate } from './utilities';
 
 /**
  * Manages Org Info webpanels
@@ -60,7 +60,7 @@ export class OrgInfoPanel {
                 enableScripts: true,
                 enableFindWidget: true,
                 retainContextWhenHidden: true,
-                localResourceRoots: [vscode.Uri.file(path.join(getExtensionPath(), 'media'))]
+                localResourceRoots: [vscode.Uri.file(path.join(getExtensionPath(), 'resources'))]
             }
         );
 
@@ -129,8 +129,8 @@ export class OrgInfoPanel {
      * @param orgInfo Org Info to expand in the webview
      */
     private _getHtmlForWebview(webview: vscode.Webview, orgInfo: OrgInfo) {
-        const redCirclePath = vscode.Uri.file(path.join(getExtensionPath(), 'media', 'red.png'));
-        const greenCirclePath = vscode.Uri.file(path.join(getExtensionPath(), 'media', 'green.png'));
+        const redCirclePath = vscode.Uri.file(path.join(getExtensionPath(), 'resources', 'red.png'));
+        const greenCirclePath = vscode.Uri.file(path.join(getExtensionPath(), 'resources', 'green.png'));
         const imgAttributes = 'width="16" height="16" align="baseline"';
         const redCircleImg = `<img alt="Org expired!" src="${webview.asWebviewUri(redCirclePath)}" ${imgAttributes}/>`;
         const greenCircleImg = `<img alt="Not yet expired" src="${webview.asWebviewUri(greenCirclePath)}" ${imgAttributes}/>`;
@@ -138,9 +138,9 @@ export class OrgInfoPanel {
         const expiredSpan = `<span class="expired">&nbsp;Expired</span>`;
 
         let varWrapper = {
-            cssFile: webview.asWebviewUri(vscode.Uri.file(path.join(getExtensionPath(), 'media', 'org_info.css'))),
-            jsFile: webview.asWebviewUri(vscode.Uri.file(path.join(getExtensionPath(), 'media', 'org_info.js'))),
-            renderjsonFile: webview.asWebviewUri(vscode.Uri.file(path.join(getExtensionPath(), 'media', 'renderjson.js'))),
+            cssFile: webview.asWebviewUri(vscode.Uri.file(path.join(getExtensionPath(), 'resources', 'html', 'scripts', 'styles.css'))),
+            jsFile: webview.asWebviewUri(vscode.Uri.file(path.join(getExtensionPath(), 'resources', 'html', 'scripts', 'org_info.js'))),
+            renderjsonFile: webview.asWebviewUri(vscode.Uri.file(path.join(getExtensionPath(), 'resources', 'html', 'scripts', 'renderjson.js'))),
             orgInfo: orgInfo,
             orgType: orgInfo?.isDevHub ? 'Dev Hub' : orgInfo?.devHubUsername ? 'Scratch Org' : 'Sandbox',
             orgLabelClass: orgInfo?.isDevHub ? 'label-red' : orgInfo?.devHubUsername ? 'label-blue' : 'label-green',
@@ -153,38 +153,16 @@ export class OrgInfoPanel {
         };
 
         if (orgInfo?.devHubUsername) {
-            varWrapper.scratchOrgInfoFragment = this.loadFromTemplate(path.join(getExtensionPath(), 'media', 'html', '_scratch-org-info.html'), varWrapper);
-            varWrapper.scratchOrgActionsFragment = this.loadFromTemplate(path.join(getExtensionPath(), 'media', 'html', '_scratch-org-actions.html'), varWrapper);
+            varWrapper.scratchOrgInfoFragment = loadFromTemplate(path.join(getExtensionPath(), 'resources', 'html', '_scratch-org-info.html'), varWrapper);
+            varWrapper.scratchOrgActionsFragment = loadFromTemplate(path.join(getExtensionPath(), 'resources', 'html', '_scratch-org-actions.html'), varWrapper);
         }
 
         const adminActionsEnabled = vscode.workspace.getConfiguration().get('sftk.enableSysAdminActions');
         if (adminActionsEnabled) {
-            varWrapper.adminActionsFragment = this.loadFromTemplate(path.join(getExtensionPath(), 'media', 'html', '_admin-actions.html'), varWrapper);
+            varWrapper.adminActionsFragment = loadFromTemplate(path.join(getExtensionPath(), 'resources', 'html', '_admin-actions.html'), varWrapper);
         }
 
-        return this.loadFromTemplate(path.join(getExtensionPath(), 'media', 'html', 'org-info-template.html'), varWrapper);
-    }
-
-
-    /**
-     * Reads a template from teh filesystem and evals all the variables included, against the variables provided in the varWrapper.
-     * 
-     * @param templateFile filename of the template to read
-     * @param varWrapper wrapper with all variables needed for the template
-     */
-    private loadFromTemplate(templateFile: string, _varWrapper: any): string {
-        //console.log(`Loading template file '${templateFile}'`);
-        let fileContent = readFileSync(vscode.Uri.file(templateFile).fsPath).toString('UTF-8');
-        let variables = fileContent.match(/\$\{.*?\}/gi);
-        if (variables) {
-            variables.forEach(v => {
-                let ev = v.replace(/\$\{(.*?)\}/, "$1");
-                //console.log(`Replacing variable ${ev} --> ${v}`);
-                fileContent = fileContent.replace(`${v}`, eval(`_varWrapper.${ev}`));
-            });
-        }
-        //console.log(`File ${templateFile} parsed successfully.`);
-        return fileContent;
+        return loadFromTemplate(path.join(getExtensionPath(), 'resources', 'html', 'org-info-template.html'), varWrapper);
     }
 
     /**
@@ -255,11 +233,11 @@ export class OrgInfoPanel {
             var p = new Promise(resolve => {
                 let cp = require('child_process');
                 let command = `sfdx force:alias:set ${message.alias}=${this._orgInfo.username}`;
-                loggingChannel.appendLine(command);
-                cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
+                utilities.loggingChannel.appendLine(command);
+                cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
                     if (err) {
                         vscode.window.showErrorMessage('Error Setting alias. Check debug log.');
-                        loggingChannel.appendLine(stderr);
+                        utilities.loggingChannel.appendLine(stderr);
                         resolve();
                     }
                     else {
@@ -295,20 +273,20 @@ export class OrgInfoPanel {
         const request = require('request');
         let url = `${this._orgInfo.instanceUrl}${message.url}`;
         let cp = require('child_process');
-        let command = `sfdx force:user:display -u ${this._orgInfo.username} --json`;
-        loggingChannel.appendLine(command);
-        cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
+        let command = `sfdx force:user:display -u ${this._orgInfo.username} -v ${this._orgInfo.devHubUsername} --json`;
+        utilities.loggingChannel.appendLine(command);
+        cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
             if (err) {
                 let errorStatus: ErrorStatus = JSON.parse(stderr);
                 vscode.window.showErrorMessage(errorStatus.message);
-                loggingChannel.appendLine(errorStatus.message);
+                utilities.loggingChannel.appendLine(errorStatus.message);
             }
             else {
-                loggingChannel.appendLine(`User detail retrieved:\n ${stdout}`);
+                utilities.loggingChannel.appendLine(`User detail retrieved:\n ${stdout}`);
                 let detail: UserDetailResult = JSON.parse(stdout);
                 let sessionID = detail.result.accessToken;
-                loggingChannel.appendLine(`Executing REST call ${message.method} - ${url}`);
-                loggingChannel.appendLine(`Access Token: '${sessionID}`);
+                utilities.loggingChannel.appendLine(`Executing REST call ${message.method} - ${url}`);
+                utilities.loggingChannel.appendLine(`OAuth Token: '${sessionID}`);
                 const options = {
                     url: url,
                     method: message.method,
@@ -321,8 +299,8 @@ export class OrgInfoPanel {
                 };
                 request(options, (err: any, _res: any, body: any) => {
                     if (err) {
-                        loggingChannel.appendLine(err);
-                        promptAndShowErrorLog(`REST API call ended with an error.\nCheck output logs.`);
+                        utilities.loggingChannel.appendLine(err);
+                        utilities.promptAndShowErrorLog(`REST API call ended with an error.\nCheck output logs.`);
                         return;
                     }
                     // This is necessary because of REST API callbacks which may arrive late, when the panel is closed.
@@ -343,7 +321,7 @@ export class OrgInfoPanel {
     private fetchReleaseVersion(orgname: string) {
         const request = require('request');
         let url = `${this._orgInfo.instanceUrl}/services/data`;
-        loggingChannel.appendLine(`Executing REST call GET - ${url}`);
+        utilities.loggingChannel.appendLine(`Executing REST call GET - ${url}`);
         const options = {
             url: url,
             json: true,
@@ -354,8 +332,8 @@ export class OrgInfoPanel {
         };
         request(options, (err: any, res: any, body: ReleaseVersionResult[]) => {
             if (err) {
-                loggingChannel.appendLine(err);
-                promptAndShowErrorLog(`REST API call to ${orgname} ended with an error.\nCheck output logs.`);
+                utilities.loggingChannel.appendLine(err);
+                utilities.promptAndShowErrorLog(`REST API call to ${orgname} ended with an error.\nCheck output logs.`);
                 return;
             }
             let lastVersion = body.reduce(function (a, b) {
@@ -383,18 +361,18 @@ export class OrgInfoPanel {
             var p = new Promise(resolve => {
                 let cp = require('child_process');
                 let overwrite = message.overwrite === 'overwrite' ? '--forceoverwrite' : '';
-                let command = `sfdx force:source:pull --loglevel fatal ${overwrite} -u ${this._orgInfo.username}`;
-                loggingChannel.appendLine(command);
-                cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
+                let command = `sfdx force:source:pull --loglevel fatal ${overwrite} -u ${this._orgInfo.username} --json`;
+                utilities.loggingChannel.appendLine(command);
+                cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
                     if (err) {
-                        loggingChannel.appendLine(stderr);
+                        utilities.promptAndShowErrorResultsPanel(`Source retrieval from ${orgname} ended with an error.`, command, stderr);
+                        utilities.loggingChannel.appendLine(stderr);
                         resolve();
-                        promptAndShowErrorLog(`Source retrieval from ${orgname} ended with an error.\nCheck output logs.`);
                     }
                     else {
-                        loggingChannel.appendLine(stdout);
+                        utilities.promptAndShowInfoResultsPanel(`Source retrieval from ${orgname} executed.`, command, stdout);
+                        utilities.loggingChannel.appendLine(stdout);
                         resolve();
-                        promptAndShowInfoLog(`Source retrieval from ${orgname} executed.\nCheck output logs for details.`);
                     }
                 });
             });
@@ -413,22 +391,22 @@ export class OrgInfoPanel {
         window.withProgress({
             location: ProgressLocation.Notification,
             title: `Deploying source to ${orgname}`,
-            cancellable: false
+            cancellable: true
         }, (_progress, _token) => {
             var p = new Promise(resolve => {
                 let cp = require('child_process');
                 let overwrite = message.overwrite === 'overwrite' ? '--forceoverwrite' : '';
-                let command = `sfdx force:source:push --loglevel fatal ${overwrite} -u ${this._orgInfo.username}`;
-                loggingChannel.appendLine(command);
-                cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
+                let command = `sfdx force:source:push --loglevel warn ${overwrite} -u ${this._orgInfo.username} --json`;
+                utilities.loggingChannel.appendLine(command);
+                cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
                     if (err) {
-                        vscode.window.showErrorMessage(`Source deployment to ${orgname} ended with an error.\nCheck output logs.`);
-                        loggingChannel.appendLine(stderr);
+                        utilities.promptAndShowErrorResultsPanel(`Source deployment to ${orgname} ended with an error.`, command, stderr);
+                        utilities.loggingChannel.appendLine(stderr);
                         resolve();
                     }
                     else {
-                        vscode.window.showInformationMessage(`Source deployment to ${orgname} executed.\nCheck output logs for details.`);
-                        loggingChannel.appendLine(stdout);
+                        utilities.promptAndShowInfoResultsPanel(`Source deployment to ${orgname} executed.`, command, stdout);
+                        utilities.loggingChannel.appendLine(stdout);
                         resolve();
                     }
                 });
@@ -446,15 +424,15 @@ export class OrgInfoPanel {
     private executeQueryAndShowResults(message: any) {
         let cp = require('child_process');
         let command = `sfdx force:data:soql:query -u ${this._orgInfo.username} -r ${message.format} -q "${message.soql} LIMIT ${message.limit}"`;
-        loggingChannel.appendLine(command);
-        cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
+        utilities.loggingChannel.appendLine(command);
+        cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
             if (err) {
                 vscode.window.showErrorMessage('Error in SOQL execution, check the query');
-                loggingChannel.appendLine(stderr);
+                utilities.loggingChannel.appendLine(stderr);
                 this._panel.webview.postMessage({ command: 'showQueryResults', data: JSON.stringify(err) });
             }
             else {
-                loggingChannel.appendLine(`Query executed successfully.`);
+                utilities.loggingChannel.appendLine(`Query executed successfully.`);
                 this._panel.webview.postMessage({ command: 'showQueryResults', data: stdout });
             }
         });
@@ -467,18 +445,18 @@ export class OrgInfoPanel {
     private generateAndShowAccessLink() {
         let cp = require('child_process');
         let command = `sfdx force:user:display -u ${this._orgInfo.username} --json`;
-        loggingChannel.appendLine(command);
-        cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
+        utilities.loggingChannel.appendLine(command);
+        cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
             if (err) {
                 let errorStatus: ErrorStatus = JSON.parse(stderr);
                 vscode.window.showErrorMessage(errorStatus.message);
-                loggingChannel.appendLine(errorStatus.message);
+                utilities.loggingChannel.appendLine(errorStatus.message);
             }
             else {
-                loggingChannel.appendLine(`User detail retrieved:\n ${stdout}`);
+                utilities.loggingChannel.appendLine(`User detail retrieved:\n ${stdout}`);
                 let detail: UserDetailResult = JSON.parse(stdout);
                 let accessLinkUrl = `${detail.result.instanceUrl}/secur/frontdoor.jsp?sid=${detail.result.accessToken}`;
-                loggingChannel.appendLine(`Generated ${accessLinkUrl}`);
+                utilities.loggingChannel.appendLine(`Generated ${accessLinkUrl}`);
                 this._panel.webview.postMessage({ command: 'showAccessLink', accessLinkUrl: accessLinkUrl });
             }
         });

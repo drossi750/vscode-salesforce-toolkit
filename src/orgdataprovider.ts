@@ -17,15 +17,15 @@
 
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as utilities from './utilities';
 import { ErrorStatus, OrgInfo, OrgListResult } from "./interfaces";
-import { loggingChannel } from './extension';
 
 // Icons for the treeview elements
-import hubIcon from '../media/org.png';
-import sbxIcon from '../media/sbx.png';
-import scratchIcon from '../media/scratch-ok.png';
-import scratchExpiredIcon from '../media/scratch-ko.png';
-import scratchDefaultIcon from '../media/scratch-default.png';
+import hubIcon from '../resources/org.png';
+import sbxIcon from '../resources/sbx.png';
+import scratchIcon from '../resources/scratch-ok.png';
+import scratchExpiredIcon from '../resources/scratch-ko.png';
+import scratchDefaultIcon from '../resources/scratch-default.png';
 
 /**
  * Data provider for the Connected Orgs Treeview
@@ -91,15 +91,15 @@ export class OrgDataProvider implements vscode.TreeDataProvider<Org> {
         const showExpired = vscode.workspace.getConfiguration().get('sftk.showExpiredScratchOrgs');
         let command = `sfdx force:org:list ${showExpired ? '--all' : ''} --json`;
         let mediaPath = path.join(this.extensionPath, 'dist');
-        loggingChannel.appendLine(command);
+        utilities.loggingChannel.appendLine(command);
         let iconBuilder: IconBuilder = new IconBuilder(mediaPath);
         cp.exec(command, { cwd: this.workspaceRoot }, (err: string, stdout: string, stderr: string) => {
             if (err) {
                 let errorStatus: ErrorStatus = JSON.parse(stderr);
                 vscode.window.showErrorMessage(errorStatus.message);
-                loggingChannel.appendLine(errorStatus.message);
+                utilities.loggingChannel.appendLine(errorStatus.message);
             } else {
-                loggingChannel.appendLine('Org list retrieved');
+                utilities.loggingChannel.appendLine('Org list retrieved');
                 this.orgList = [];
                 this.scratchOrgs = [];
                 this.defaultDevHub = undefined;

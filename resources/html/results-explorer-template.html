@@ -1,0 +1,54 @@
+<!--
+ Copyright (C) 2020 Davide Rossi
+ 
+ This file is part of vscode-salesforce-toolkit.
+ 
+ vscode-salesforce-toolkit is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ vscode-salesforce-toolkit is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with vscode-salesforce-toolkit.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <link rel="stylesheet" href="${cssFile}" />
+    <script type="text/javascript" src="${renderjsonFile}"></script>
+</head>
+
+<body>
+    <span class="spacer">&nbsp;</span>
+    <details open>
+        <summary>
+            <pre>${operation}</pre>
+        </summary>
+        <span>
+            <div class="container">
+                <span class="inline-block">
+                    <pre id="results" class="json-explorer">${results}</pre>
+                </span>
+                <span class="inline-block">
+                    <!--
+                    <button class="button" onclick="render()">Render</button>
+                    -->
+                </span>
+            </div>
+        </span>
+    </details>
+</body>
+
+</html>
+
+<script async type="text/javascript" src="${jsFile}"></script>

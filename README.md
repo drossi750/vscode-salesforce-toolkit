@@ -1,7 +1,9 @@
 # Visual Studio Code Salesforce Toolkit
 
-This is a VS Code Extension for Salesforce DX projects. Provides quick visual access to scratch orgs, sandboxes, and other useful features.
-The extension will become active if the workspace contains the Salesforce's DX project `force-app/` directory.
+[![](https://vsmarketplacebadge.apphb.com/version/drossi750.vscode-salesforce-toolkit.svg)](https://marketplace.visualstudio.com/items?itemName=drossi750.vscode-salesforce-toolkit) 
+
+This extension is designed to support developers with Salesforce DX projects. Provides quick visual access to scratch orgs, sandboxes, and other useful features.
+The icon will appear if the workspace contains the Salesforce's DX project `force-app/` directory.
 
 # Main Features
 
@@ -10,7 +12,7 @@ The extension will become active if the workspace contains the Salesforce's DX p
 Shows the Orgs (Dev Hubs, Sandboxes and Scratch Orgs) with different icon colors depending on the type.
 On mouse hover, there are quick actions available (Open, Setup, Delete, Set as default)
 
-![Org Explorer](./media/org_explorer.gif)
+![Org Explorer](./resources/org_explorer.gif)
 
 Color code:
 * Blue = Dev Hub
@@ -22,7 +24,7 @@ Color code:
 
 Clicking on an org from the Org Explorer, opens a practical all-in-one Info Panel for the org selected.
 
-![Org Info Panel](./media/org_info_panel.gif)
+![Org Info Panel](./resources/org_info_panel.gif)
 
 Info & Actions available:
 * Quick view for Org Id, Release, API Version, Type and username
@@ -36,6 +38,20 @@ Info & Actions available:
 * SOQL Query tool
 * REST API Explorer
 
+### Results Viewer Panel
+
+After performing source push or pull operations, clicking on the "Show Results" button of the notification
+
+![Notification](./resources/notification.png)
+
+You will access a page with the output of the DX command, in JSON.
+
+![Results Viewer Panel](./resources/results-viewer.png)
+
 **Enjoy!**
+ 
+This software is free of charge, opensource, and it's developed during my spare time. If you feel like you want to contribute:
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/drossi750)
 
 Icons made by [Smashicons](https://www.flaticon.com/authors/smashicons) from [www.flaticon.com](https://www.flaticon.com/)

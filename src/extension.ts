@@ -16,23 +16,21 @@
 // along with vscode-salesforce-toolkit.  If not, see <http://www.gnu.org/licenses/>.
 
 import * as vscode from 'vscode';
-import { window } from 'vscode';
+import * as utilities from './utilities';
 import { OrgDataProvider, Org } from './orgdataprovider';
-import { isNullOrUndefined } from 'util';
 import { ErrorStatus, OrgListResult, OrgInfo, DeploymentResult } from './interfaces';
 import { OrgInfoPanel } from './orginfopanel';
 
-export const loggingChannel = vscode.window.createOutputChannel('Salesforce Toolkit Logs');
 export var _extensionPath: string;
 let orgDataProvider: OrgDataProvider;
 let _context: vscode.ExtensionContext;
 
 export function activate(context: vscode.ExtensionContext) {
-	loggingChannel.append("Initializing Salesforce Toolkit (SFTK) Extension...");
+	utilities.loggingChannel.append("Initializing Salesforce Toolkit (SFTK) Extension...");
 	_extensionPath = context.extensionPath;
 	_context = context;
 	// Org explorer data provider for treeview
-	orgDataProvider = new OrgDataProvider(getWorkspaceRoot(), getExtensionPath());
+	orgDataProvider = new OrgDataProvider(utilities.getWorkspaceRoot(), getExtensionPath());
 	vscode.window.registerTreeDataProvider('connected-orgs', orgDataProvider);
 	let createScratchFromExplorer = vscode.commands.registerCommand('sftk.createScratch', createScratch());
 	context.subscriptions.push(createScratchFromExplorer);
@@ -113,15 +111,15 @@ function createScratch(): (...args: any[]) => any {
 				configFiles.push(configFile);
 			});
 			let configFile = await selectConfigFile(configFiles);
-			if (isNullOrUndefined(configFile) || configFile === '') {
+			if (configFile === null || configFile === undefined || configFile === '') {
 				return;
 			}
 			let alias;
 			let aliasProvided = false;
 
 			while (!aliasProvided) {
-				alias = await promptUserInput('Scratch Org Alias');
-				if (isNullOrUndefined(alias) || alias === '') {
+				alias = await utilities.promptUserInput('Scratch Org Alias');
+				if (alias === null || alias === undefined || alias === '') {
 					return;
 				}
 				alias = alias.replace(/[^A-Za-z0-9-]/g, "_");
@@ -133,34 +131,34 @@ function createScratch(): (...args: any[]) => any {
 				}
 			}
 
-			let durationDays = await promptUserInput('Duration (in days)');
-			if (isNullOrUndefined(durationDays) || durationDays === '') {
+			let durationDays = await utilities.promptUserInput('Duration (in days)');
+			if (durationDays === null || durationDays === undefined || durationDays === '') {
 				return;
 			}
 			let cp = require('child_process');
 			const command = `sfdx force:org:create -f config/${configFile} --setalias ${alias} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal --wait ${timeout}`;
-			loggingChannel.appendLine(command);
+			utilities.loggingChannel.appendLine(command);
 
-			window.withProgress({
+			vscode.window.withProgress({
 				location: vscode.ProgressLocation.Notification,
 				title: `Creating Scratch Org from config/${configFile}`,
 				cancellable: true
 			}, (_progress, _token) => {
 				var p = new Promise(resolve => {
-					cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
+					cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
 						if (err) {
 							let errorStatus: ErrorStatus = JSON.parse(stderr);
-							loggingChannel.appendLine(errorStatus.message);
+							utilities.loggingChannel.appendLine(errorStatus.message);
 							// purgeOrphanedScratchOrgs();
 							resolve();
-							promptAndShowErrorLog("Error during Scratch Org creation.");
+							utilities.promptAndShowErrorLog("Error during Scratch Org creation.");
 						}
 						else {
 							let result: OrgListResult = JSON.parse(stdout);
-							loggingChannel.appendLine('' + result.status);
+							utilities.loggingChannel.appendLine('' + result.status);
 							orgDataProvider.populateOrgList();
 							resolve();
-							promptAndShowInfoLog("Scratch Org created successfully.");
+							utilities.promptAndShowInfoLog("Scratch Org created successfully.");
 						}
 					});
 				});
@@ -168,7 +166,7 @@ function createScratch(): (...args: any[]) => any {
 			});
 		}
 		else {
-			loggingChannel.appendLine('No scratch org configuration files found.');
+			utilities.loggingChannel.appendLine('No scratch org configuration files found.');
 		}
 	};
 }
@@ -177,6 +175,8 @@ function createScratch(): (...args: any[]) => any {
  * Deletes the ScratchOrgInfo entries for the given user, which are not retrieved with the sfdx force:org:list command.
  * NOTE: if a developer uses two different machines to create scratch orgs, this will delete orgs used in the other machine!
  * May be mitigated by introducing an additional check on last used day (e.g. delete only those older than 3 days or so).
+ * 
+ * EXPERIMENTAL FEATURE - NOT YET ACTIVATED
  */
 async function purgeOrphanedScratchOrgs() {
 	return async () => {
@@ -187,18 +187,18 @@ async function purgeOrphanedScratchOrgs() {
 			if (devHub) {
 				const cp = require('child_process');
 				let command = `sfdx force:data:soql:query  -u ${devHub.username} -q "SELECT Id,LoginUrl,SignupUsername FROM ScratchOrgInfo WHERE Status != 'Deleted' AND SignupEmail = ${devHub.username}" --json`;
-				loggingChannel.appendLine(command);
-				await cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
+				utilities.loggingChannel.appendLine(command);
+				await cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
 					if (err) {
 						let errorStatus: ErrorStatus = JSON.parse(stderr);
 						vscode.window.showErrorMessage(errorStatus.message);
-						loggingChannel.appendLine(errorStatus.message);
+						utilities.loggingChannel.appendLine(errorStatus.message);
 					}
 					else {
 						//command = `sfdx force:data:record:delete -u ${devHub.username} -s ScratchOrgInfo -i ${}"`;
 						//let result: OrgListResult = JSON.parse(stdout);
 						//loggingChannel.appendLine('' + result.status);
-						loggingChannel.appendLine('' + stdout);
+						utilities.loggingChannel.appendLine('' + stdout);
 					}
 				});
 			}
@@ -216,42 +216,42 @@ export async function executeLocalTests(orgInfo: OrgInfo): Promise<void> {
 }
 
 /**
- * Executes unit tests "RunLocalTests" with a simulated deployment, against the target org.
+ * Executes real or simulated deployment, against the target org.
  *
  * @param orgInfo the org against which execute the local tests.
  * @param testOnly whether to execute a real deployment or just simulate one
  */
 export async function executeDeployment(orgInfo: OrgInfo, testOnly: boolean): Promise<void> {
-	let userChoice: string | undefined = await window.showWarningMessage(`Execution of Test or Deployment on a shared sandbox will impact the queue.\nThis may have side effects CI/CD systems using that org. Are you sure you want to proceed?`, { modal: true }, 'Yes');
+	let userChoice: string | undefined = await vscode.window.showWarningMessage(`Execution of Test or Deployment on a shared sandbox will impact the queue.\nThis may have side effects CI/CD systems using that org. Are you sure you want to proceed?`, { modal: true }, 'Yes');
 	if (userChoice === 'Yes') {
 		let operationTitle = `${testOnly ? 'Unit Test' : 'Deployment'} -> ${orgInfo.alias ? orgInfo.alias : orgInfo.orgId}`;
-		window.withProgress({
+		vscode.window.withProgress({
 			location: vscode.ProgressLocation.Notification,
 			title: operationTitle,
 			cancellable: false
 		}, (_progress, _token) => {
 			var p = new Promise(resolve => {
-				loggingChannel.appendLine(`Executing RunLocalTests on org ${orgInfo.orgId} with user ${orgInfo.username}`);
+				utilities.loggingChannel.appendLine(`Executing RunLocalTests on org ${orgInfo.orgId} with user ${orgInfo.username}`);
 				_progress.report({ message: `Executing ${testOnly ? 'Unit Test' : 'Deployment'}...` });
 				let cp = require('child_process');
 				let command = `sfdx force:source:deploy -p force-app/ -l RunLocalTests -u ${orgInfo.username} ${testOnly ? '-c' : ''} -w 90 --loglevel=trace --json`;
-				loggingChannel.appendLine(command);
+				utilities.loggingChannel.appendLine(command);
 				cp.exec(command, (err: string, stdout: string, stderr: string) => {
 					if (err) {
 						let errorStatus: ErrorStatus = JSON.parse(stderr);
-						loggingChannel.appendLine(errorStatus.message);
+						utilities.loggingChannel.appendLine(errorStatus.message);
 						resolve();
-						promptAndShowErrorLog("Error during Unit Test execution: Check logs.");
+						utilities.promptAndShowErrorLog("Error during Unit Test execution: Check logs.");
 					}
 					else {
 						try {
 							let result: DeploymentResult = JSON.parse(stdout);
-							loggingChannel.appendLine('Test execution: ' + result.result.status);
-							promptAndShowInfoLog(`Unit Tests result: ${result.result.status}`);
+							utilities.loggingChannel.appendLine('Test execution: ' + result.result.status);
+							utilities.promptAndShowInfoLog(`Unit Tests result: ${result.result.status}`);
 						}
 						catch (exc) {
-							promptAndShowErrorLog("Error during JSON output parsing.");
-							loggingChannel.appendLine(stdout);
+							utilities.promptAndShowErrorLog("Error during JSON output parsing.");
+							utilities.loggingChannel.appendLine(stdout);
 						}
 						resolve();
 					}
@@ -266,17 +266,17 @@ export async function executeDeployment(orgInfo: OrgInfo, testOnly: boolean): Pr
  * Delete a Scratch Org. May require input.
  */
 async function deleteScratch(org: Org): Promise<void> {
-	let userChoice: string | undefined = await window.showWarningMessage(`Are you sure you want to delete the org ${org.alias} [${org.username}]?`, { modal: true }, 'Delete');
+	let userChoice: string | undefined = await vscode.window.showWarningMessage(`Are you sure you want to delete the org ${org.alias} [${org.username}]?`, { modal: true }, 'Delete');
 	if (userChoice === 'Delete') {
-		loggingChannel.appendLine(`Deleted ${org.username}`);
+		utilities.loggingChannel.appendLine(`Deleted ${org.username}`);
 		let cp = require('child_process');
 		const command = `sfdx force:org:delete -u ${org.username} -p --json`;
-		loggingChannel.appendLine(command);
+		utilities.loggingChannel.appendLine(command);
 		orgDataProvider.removeFromTree(org);
-		await cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
+		await cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
 			if (err) {
 				vscode.window.showErrorMessage(`Error during deletion of Scratch Org '${org.username}'.`);
-				loggingChannel.appendLine(stderr);
+				utilities.loggingChannel.appendLine(stderr);
 			}
 			else {
 				vscode.window.showInformationMessage(`Scratch Org '${org.username}' deleted.`);
@@ -291,15 +291,15 @@ async function deleteScratch(org: Org): Promise<void> {
  */
 function purgeScratchOrgs(): (...args: any[]) => any {
 	return async () => {
-		let userChoice: string | undefined = await window.showWarningMessage(`This action will disconnect the scratch orgs marked as expired. Do you want to proceed?`, { modal: true }, 'Yes');
+		let userChoice: string | undefined = await vscode.window.showWarningMessage(`This action will disconnect the scratch orgs marked as expired. Do you want to proceed?`, { modal: true }, 'Yes');
 		if (userChoice === 'Yes') {
 			let cp = require('child_process');
 			const command = `sfdx force:org:list --clean -p --json`;
-			loggingChannel.appendLine(command);
-			await cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
+			utilities.loggingChannel.appendLine(command);
+			await cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
 				if (err) {
 					vscode.window.showErrorMessage(`Error during cleanup of expired Scratch Orgs.`);
-					loggingChannel.appendLine(stderr);
+					utilities.loggingChannel.appendLine(stderr);
 				}
 				else {
 					vscode.window.showInformationMessage(`Expired Scratch Orgs purged.`);
@@ -317,11 +317,11 @@ async function openOrg(org: Org, path?: string): Promise<void> {
 	let cp = require('child_process');
 	const openPath = path ? `--path ${path}` : '';
 	const command = `sfdx force:org:open -u ${org.username} ${openPath}`;
-	loggingChannel.appendLine(command);
-	await cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
+	utilities.loggingChannel.appendLine(command);
+	await cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
 		if (err) {
 			vscode.window.showErrorMessage(`Error opening Org '${org.username}'.`);
-			loggingChannel.appendLine(stderr);
+			utilities.loggingChannel.appendLine(stderr);
 		}
 	});
 }
@@ -333,13 +333,13 @@ async function openOrg(org: Org, path?: string): Promise<void> {
 async function logout(org: Org): Promise<void> {
 	let cp = require('child_process');
 	const command = `sfdx force:auth:logout -p -u ${org.username}`;
-	loggingChannel.appendLine(command);
-	await cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
+	utilities.loggingChannel.appendLine(command);
+	await cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
 		if (err) {
 			vscode.window.showErrorMessage(`Error during logout for '${org.username}'.`);
-			loggingChannel.appendLine(stderr);
+			utilities.loggingChannel.appendLine(stderr);
 		} else {
-			loggingChannel.appendLine(_stdout);
+			utilities.loggingChannel.appendLine(_stdout);
 			OrgInfoPanel.disposeIfVisible();
 			orgDataProvider.populateOrgList();
 		}
@@ -352,14 +352,14 @@ async function logout(org: Org): Promise<void> {
 export async function setScratch(org: Org): Promise<void> {
 	let cp = require('child_process');
 	const command = `sfdx force:config:set defaultusername=${org.alias ? org.alias : org.username}`;
-	loggingChannel.appendLine(command);
+	utilities.loggingChannel.appendLine(command);
 	orgDataProvider.setNewDefault(org);
-	await cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
+	await cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
 		if (err) {
 			vscode.window.showErrorMessage(`Error setting default scratch org '${org.username}'.`);
-			loggingChannel.appendLine(stderr);
+			utilities.loggingChannel.appendLine(stderr);
 		}
-		loggingChannel.appendLine(stdout);
+		utilities.loggingChannel.appendLine(stdout);
 		orgDataProvider.populateOrgList();
 	});
 }
@@ -370,14 +370,14 @@ export async function setScratch(org: Org): Promise<void> {
 async function setDevHub(org: Org): Promise<void> {
 	let cp = require('child_process');
 	const command = `sfdx force:config:set defaultdevhubusername=${org.alias ? org.alias : org.username}`;
-	loggingChannel.appendLine(command);
+	utilities.loggingChannel.appendLine(command);
 	orgDataProvider.setNewDefault(org);
-	await cp.exec(command, { cwd: getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
+	await cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
 		if (err) {
 			vscode.window.showErrorMessage(`Error setting default dev hub '${org.username}'.`);
-			loggingChannel.appendLine(stderr);
+			utilities.loggingChannel.appendLine(stderr);
 		}
-		loggingChannel.appendLine(stdout);
+		utilities.loggingChannel.appendLine(stdout);
 		orgDataProvider.populateOrgList();
 	});
 }
@@ -390,56 +390,12 @@ async function showOrgInfo(orgInfo: OrgInfo): Promise<void> {
 }
 
 /**
- * Return the filesystem path of the workspace root
- */
-export function getWorkspaceRoot(): string {
-	let root = '';
-	if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length < 1) {
-		loggingChannel.appendLine('No active workspace found');
-	} else {
-		root = vscode.workspace.workspaceFolders[0].uri.fsPath;
-	}
-	return root;
-}
-
-/**
  * Select configuration file
  */
 export async function selectConfigFile(configFiles: string[] | Thenable<string[]>) {
 	let i = 0;
-	const result = await window.showQuickPick(configFiles, {
+	const result = await vscode.window.showQuickPick(configFiles, {
 		placeHolder: 'Scratch org configuration file...'
 	});
 	return result;
-}
-
-/**
- * Prompt for user input
- */
-export async function promptUserInput(placeHolder: string) {
-	const result = await window.showInputBox({
-		value: '',
-		placeHolder: placeHolder
-	});
-	return result;
-}
-
-/**
- * Show an Error message and asks to the user if to show the application log.
- */
-export async function promptAndShowErrorLog(text: string) {
-	let userChoice = await window.showErrorMessage(text, { modal: false }, 'Close', 'Show Logs');
-	if (userChoice === 'Show Logs') {
-		loggingChannel.show();
-	}
-}
-
-/**
- * Show an Information message and asks to the user if to show the application log.
- */
-export async function promptAndShowInfoLog(text: string) {
-	let userChoice = await window.showInformationMessage(text, { modal: false }, 'Close', 'Show Logs');
-	if (userChoice === 'Show Logs') {
-		loggingChannel.show();
-	}
 }
