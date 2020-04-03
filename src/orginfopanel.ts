@@ -396,11 +396,14 @@ export class OrgInfoPanel {
             var p = new Promise(resolve => {
                 let cp = require('child_process');
                 let overwrite = message.overwrite === 'overwrite' ? '--forceoverwrite' : '';
-                let command = `sfdx force:source:push --loglevel warn ${overwrite} -u ${this._orgInfo.username} --json`;
+                let command = `sfdx force:source:push --loglevel fatal ${overwrite} -u ${this._orgInfo.username} --json`;
                 utilities.loggingChannel.appendLine(command);
                 cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
                     if (err) {
-                        utilities.promptAndShowErrorResultsPanel(`Source deployment to ${orgname} ended with an error.`, command, stderr);
+                        // Salesforce CLI sometimes sends errors over stdout..... ¯\_(ツ)_/¯
+                        let output = stderr ? stderr : stdout;
+                        utilities.promptAndShowErrorResultsPanel(`Source deployment to ${orgname} ended with an error.`, command, output);
+                        utilities.loggingChannel.appendLine(stdout);
                         utilities.loggingChannel.appendLine(stderr);
                         resolve();
                     }

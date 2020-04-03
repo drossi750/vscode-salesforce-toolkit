@@ -12,3 +12,7 @@
 
 * Introduced Results Viewer to show the output of operations
 * Refactored resources and methods to improve code reusability
+
+## 1.2.1
+
+* Fixed issue: blank result view screen on push to scratch org failure
