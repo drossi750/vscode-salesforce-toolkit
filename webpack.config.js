@@ -19,8 +19,6 @@
 
 'use strict';
 
-//var CopyWebpackPlugin = require('copy-webpack-plugin');
-
 const path = require('path');
 
 /**@type {import('webpack').Configuration}*/
@@ -60,10 +58,5 @@ const config = {
             }
         ]
     }
-    /*,plugins: [
-        new CopyWebpackPlugin([
-            { from: 'resources', to: 'resources' }
-        ])
-    ]*/
 };
 module.exports = config;

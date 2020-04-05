@@ -19,6 +19,9 @@ import * as vscode from 'vscode';
 import { readFileSync } from 'fs';
 import { ResultsPanel } from './resultspanel';
 
+// Extension id
+export const extensionId = 'drossi750.vscode-salesforce-toolkit';
+
 // Logging channel for the extension
 export const loggingChannel = vscode.window.createOutputChannel('Salesforce Toolkit Logs');
 
@@ -108,3 +111,14 @@ export function getWorkspaceRoot(): string {
     return root;
 }
 
+export function getExtension() {
+    let extension: vscode.Extension<any> | undefined;
+    const ext = vscode.extensions.getExtension(extensionId);
+    if (!ext) {
+        throw new Error('Extension was not found.');
+    }
+    if (ext) {
+        extension = ext;
+    }
+    return extension;
+}

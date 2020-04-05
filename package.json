@@ -3,6 +3,7 @@
 	"publisher": "drossi750",
 	"displayName": "Salesforce Toolkit",
 	"description": "Salesforce DX utilities for developers",
+	"license": "GPL-3.0",
 	"author": {
 		"name": "Davide Rossi",
 		"email": "drossi750@gmail.com"
@@ -187,10 +188,10 @@
 		"vscode:prepublish": "webpack --mode production --info-verbosity verbose",
 		"compile": "webpack --mode none --info-verbosity verbose",
 		"watch": "webpack --mode development --watch --info-verbosity verbose",
-		"test-compile": "tsc -p ./"
+		"pretest": "tsc -p ./",
+		"test": "mocha --ui tdd out/test/runtest.js"
 	},
 	"dependencies": {
-		"copy-webpack-plugin": "^5.1.1",
 		"file-loader": "^6.0.0",
 		"request": "^2.88.0"
 	},
@@ -200,9 +201,8 @@
 		"@types/node": "^12.11.7",
 		"@types/vscode": "^1.40.0",
 		"glob": "^7.1.5",
-		"mocha": "^6.2.2",
+		"mocha": "^6.2.3",
 		"renderjson": "^1.4.0",
-		"request": "^2.88.0",
 		"ts-loader": "^6.2.2",
 		"tslint": "^5.20.0",
 		"typescript": "^3.6.4",

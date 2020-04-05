@@ -1,5 +1,6 @@
 *.vsix
 *.swp
+.vscode-test/
 out/
 dist/
 node_modules/

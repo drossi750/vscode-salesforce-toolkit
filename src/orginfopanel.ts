@@ -458,7 +458,7 @@ export class OrgInfoPanel {
             else {
                 utilities.loggingChannel.appendLine(`User detail retrieved:\n ${stdout}`);
                 let detail: UserDetailResult = JSON.parse(stdout);
-                let accessLinkUrl = `${detail.result.instanceUrl}/secur/frontdoor.jsp?sid=${detail.result.accessToken}`;
+                let accessLinkUrl = `${detail.result.instanceUrl}secur/frontdoor.jsp?sid=${detail.result.accessToken}`;
                 utilities.loggingChannel.appendLine(`Generated ${accessLinkUrl}`);
                 this._panel.webview.postMessage({ command: 'showAccessLink', accessLinkUrl: accessLinkUrl });
             }
