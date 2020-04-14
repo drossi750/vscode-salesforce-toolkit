@@ -189,23 +189,33 @@
 		"compile": "webpack --mode none --info-verbosity verbose",
 		"watch": "webpack --mode development --watch --info-verbosity verbose",
 		"pretest": "tsc -p ./",
-		"test": "mocha --ui tdd out/test/runtest.js"
+		"test": "mocha out/test/runtest.js -ui tdd"
 	},
 	"dependencies": {
 		"file-loader": "^6.0.0",
 		"request": "^2.88.0"
 	},
 	"devDependencies": {
+		"@types/chai": "^4.2.11",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^5.2.7",
 		"@types/node": "^12.11.7",
 		"@types/vscode": "^1.40.0",
-		"glob": "^7.1.5",
+		"chai": "^4.2.0",
+		"chai-as-promised": "^7.1.1",
+		"chai-subset": "^1.6.0",
+		"decache": "^4.5.1",
+		"dom-parser": "^0.1.6",
+		"glob": "^7.1.6",
 		"mocha": "^6.2.3",
+		"mocha-multi-reporters": "^1.1.7",
+		"nyc": "^15.0.1",
+		"reflect-metadata": "^0.1.13",
 		"renderjson": "^1.4.0",
 		"ts-loader": "^6.2.2",
+		"ts-node": "^8.8.2",
 		"tslint": "^5.20.0",
-		"typescript": "^3.6.4",
+		"typescript": "^3.8.3",
 		"vscode-test": "^1.2.2",
 		"webpack": "^4.42.1",
 		"webpack-cli": "^3.3.11"

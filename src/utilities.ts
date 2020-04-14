@@ -34,7 +34,7 @@ export const loggingChannel = vscode.window.createOutputChannel('Salesforce Tool
  * @returns the template populated with the values from the _varWrapper
  */
 export function loadFromTemplate(templateFile: string, _varWrapper: any): string {
-    let fileContent = readFileSync(vscode.Uri.file(templateFile).fsPath).toString('UTF-8');
+    let fileContent = readFileSync(templateFile).toString('UTF-8');
     let variables = fileContent.match(/\$\{.*?\}/gi);
     if (variables) {
         variables.forEach(v => {

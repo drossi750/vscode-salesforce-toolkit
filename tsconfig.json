@@ -8,15 +8,10 @@
 			"es6"
 		],
 		"sourceMap": true,
-		"rootDir": "src",
 		"strict": true,
 		"noUnusedParameters": false
 	},
-	//"include": [
-	//	"./src/media.d.ts"
-	//],
-	"exclude": [
-		"node_modules",
-		".vscode-test"
+	"include": [
+		"src/**/*"
 	]
 }

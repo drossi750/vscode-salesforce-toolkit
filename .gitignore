@@ -1,6 +1,8 @@
 *.vsix
 *.swp
 .vscode-test/
+.nyc_output/
 out/
 dist/
 node_modules/
+coverage/
