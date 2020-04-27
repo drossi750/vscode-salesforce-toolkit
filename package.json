@@ -145,10 +145,12 @@
 				},
 				{
 					"command": "sftk.openOrg",
+					"when": "view == connected-orgs",
 					"group": "inline"
 				},
 				{
 					"command": "sftk.openOrgSetup",
+					"when": "view == connected-orgs",
 					"group": "inline"
 				},
 				{

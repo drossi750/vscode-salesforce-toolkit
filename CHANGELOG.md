@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.2.2
+
+* Fixed issue: inline treeview icons showing in other extensions
+
 ## 1.2.1
 
 * Fixed issue: blank result view screen on push to scratch org failure
