@@ -63,8 +63,6 @@ This software is free of charge, opensource, and it's developed during my spare 
 
 [![Report Issue](https://img.shields.io/badge/Report%20Issue-Github-green)](https://github.com/drossi750/vscode-salesforce-toolkit/issues/new/choose)
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/drossi750)
-
 ___
 
 ![GitHub](https://img.shields.io/github/license/drossi750/vscode-salesforce-toolkit)
