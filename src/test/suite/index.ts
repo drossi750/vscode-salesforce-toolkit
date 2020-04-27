@@ -18,12 +18,8 @@
 import * as path from 'path';
 import Mocha = require('mocha');
 import glob = require('glob');
-import { use } from 'chai';
 import { join } from 'path';
 import 'reflect-metadata';
-
-use(require('chai-subset'));
-use(require('chai-as-promised'));
 
 function intializeNyc() {
     const NYC = require('nyc');
