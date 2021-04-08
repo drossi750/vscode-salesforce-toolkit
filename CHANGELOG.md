@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.2.3
+
+* Dependabot bumps
+* Fixed broken link issue #6
+
 ## 1.2.2
 
 * Fixed issue: inline treeview icons showing in other extensions
