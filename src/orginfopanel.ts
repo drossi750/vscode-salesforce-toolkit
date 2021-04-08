@@ -230,7 +230,7 @@ export class OrgInfoPanel {
             title: `Updating alias...`,
             cancellable: false
         }, (_progress, _token) => {
-            var p = new Promise(resolve => {
+            var p = new Promise<void>(resolve => {
                 let cp = require('child_process');
                 let command = `sfdx force:alias:set ${message.alias}=${this._orgInfo.username}`;
                 utilities.loggingChannel.appendLine(command);
@@ -358,7 +358,7 @@ export class OrgInfoPanel {
             title: `Retrieving source from ${orgname}`,
             cancellable: false
         }, (_progress, _token) => {
-            var p = new Promise(resolve => {
+            var p = new Promise<void>(resolve => {
                 let cp = require('child_process');
                 let overwrite = message.overwrite === 'overwrite' ? '--forceoverwrite' : '';
                 let command = `sfdx force:source:pull --loglevel fatal ${overwrite} -u ${this._orgInfo.username} --json`;
@@ -393,7 +393,7 @@ export class OrgInfoPanel {
             title: `Deploying source to ${orgname}`,
             cancellable: true
         }, (_progress, _token) => {
-            var p = new Promise(resolve => {
+            var p = new Promise<void>(resolve => {
                 let cp = require('child_process');
                 let overwrite = message.overwrite === 'overwrite' ? '--forceoverwrite' : '';
                 let command = `sfdx force:source:push --loglevel fatal ${overwrite} -u ${this._orgInfo.username} --json`;
@@ -458,7 +458,8 @@ export class OrgInfoPanel {
             else {
                 utilities.loggingChannel.appendLine(`User detail retrieved:\n ${stdout}`);
                 let detail: UserDetailResult = JSON.parse(stdout);
-                let accessLinkUrl = `${detail.result.instanceUrl}secur/frontdoor.jsp?sid=${detail.result.accessToken}`;
+                let separator = detail.result.instanceUrl.endsWith('/') ? '' : '/';
+                let accessLinkUrl = `${detail.result.instanceUrl}${separator}secur/frontdoor.jsp?sid=${detail.result.accessToken}`;
                 utilities.loggingChannel.appendLine(`Generated ${accessLinkUrl}`);
                 this._panel.webview.postMessage({ command: 'showAccessLink', accessLinkUrl: accessLinkUrl });
             }
