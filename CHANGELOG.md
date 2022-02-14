@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.2.4
+
+* Dependabot bumps
+
 ## 1.2.3
 
 * Dependabot bumps
