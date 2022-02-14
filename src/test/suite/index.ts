@@ -41,7 +41,6 @@ function intializeNyc() {
 export async function run(): Promise<void> {
     const nyc = intializeNyc();
     const runner = new Mocha({});
-    runner.useColors(true);
     runner.ui('tdd');
 
     const testsRoot = path.resolve(__dirname, '..');
