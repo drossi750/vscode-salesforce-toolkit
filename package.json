@@ -187,9 +187,9 @@
 		}
 	},
 	"scripts": {
-		"vscode:prepublish": "webpack --mode production --info-verbosity verbose",
-		"compile": "webpack --mode none --info-verbosity verbose",
-		"watch": "webpack --mode development --watch --info-verbosity verbose",
+		"vscode:prepublish": "webpack --mode production",
+		"compile": "webpack --mode none",
+		"watch": "webpack --mode development --watch",
 		"pretest": "tsc -p ./",
 		"test": "mocha out/test/runtest.js -ui tdd"
 	},
