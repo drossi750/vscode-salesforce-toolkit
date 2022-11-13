@@ -209,7 +209,7 @@
 		"decache": "^4.5.1",
 		"dom-parser": "^0.1.6",
 		"glob": "^7.1.6",
-		"mocha": "^9.2.0",
+		"mocha": "^9.2.2",
 		"mocha-multi-reporters": "^1.1.7",
 		"nyc": "^15.0.1",
 		"reflect-metadata": "^0.1.13",
