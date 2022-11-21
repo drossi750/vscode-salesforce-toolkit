@@ -234,7 +234,8 @@ export async function executeDeployment(orgInfo: OrgInfo, testOnly: boolean): Pr
 				utilities.loggingChannel.appendLine(`Executing RunLocalTests on org ${orgInfo.orgId} with user ${orgInfo.username}`);
 				_progress.report({ message: `Executing ${testOnly ? 'Unit Test' : 'Deployment'}...` });
 				let cp = require('child_process');
-				let command = `sfdx force:source:deploy -p force-app/ -l RunLocalTests -u ${orgInfo.username} ${testOnly ? '-c' : ''} -w 90 --loglevel=trace --json`;
+				const packageDirectory = utilities.getDefaultPackageDirectory();
+				let command = `sfdx force:source:deploy -p ${packageDirectory} -l RunLocalTests -u ${orgInfo.username} ${testOnly ? '-c' : ''} -w 90 --loglevel=trace --json`;
 				utilities.loggingChannel.appendLine(command);
 				cp.exec(command, (err: string, stdout: string, stderr: string) => {
 					if (err) {

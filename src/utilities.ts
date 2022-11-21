@@ -22,6 +22,8 @@ import { ResultsPanel } from './resultspanel';
 // Extension id
 export const extensionId = 'drossi750.vscode-salesforce-toolkit';
 
+export const sfdxProjectFile = 'sfdx-project.json';
+
 // Logging channel for the extension
 export const loggingChannel = vscode.window.createOutputChannel('Salesforce Toolkit Logs');
 
@@ -121,4 +123,9 @@ export function getExtension() {
         extension = ext;
     }
     return extension;
+}
+
+export function getDefaultPackageDirectory(){
+    const sfdxProject = JSON.parse(readFileSync(sfdxProjectFile));
+    return sfdxProject?.packageDirectories?.find((dir:any)=>dir.default)?.path;
 }
