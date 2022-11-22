@@ -125,7 +125,7 @@ export function getExtension() {
     return extension;
 }
 
-export function getDefaultPackageDirectory(){
-    const sfdxProject = JSON.parse(readFileSync(sfdxProjectFile));
-    return sfdxProject?.packageDirectories?.find((dir:any)=>dir.default)?.path;
+export function getDefaultPackageDirectory() {
+    const sfdxProject = JSON.parse(readFileSync(sfdxProjectFile).toString());
+    return sfdxProject?.packageDirectories?.find((dir: any) => dir.default)?.path;
 }

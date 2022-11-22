@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.3.0
+
+* Dependabot bumps
+* Enhancement #18: Check for sfdx-project instead of force-app + deploy default path
+
 ## 1.2.4
 
 * Dependabot bumps
