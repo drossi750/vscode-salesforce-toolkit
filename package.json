@@ -25,7 +25,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"workspaceContains:force-app/"
+		"workspaceContains:sfdx-project.json"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
