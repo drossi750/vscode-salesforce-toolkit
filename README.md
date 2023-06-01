@@ -1,6 +1,6 @@
 # Visual Studio Code Salesforce Toolkit
 
-[![](https://vsmarketplacebadge.apphb.com/version/drossi750.vscode-salesforce-toolkit.svg)](https://marketplace.visualstudio.com/items?itemName=drossi750.vscode-salesforce-toolkit) 
+[![](https://vsmarketplacebadges.dev/version/drossi750.vscode-salesforce-toolkit.jpg)](https://marketplace.visualstudio.com/items?itemName=drossi750.vscode-salesforce-toolkit) 
 ![GitHub issues](https://img.shields.io/github/issues-raw/drossi750/vscode-salesforce-toolkit)
 
 This extension is designed to support developers with Salesforce DX projects. Provides quick visual access to scratch orgs, sandboxes, and other useful features.
