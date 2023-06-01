@@ -1,6 +1,10 @@
 # Change Log
 
-## 1.3.1
+## 1.3.0
+
+* Fix TS update issues
+
+## 1.3.1 - not released
 
 * Dependabot bumps
 * Other dependencies updates, backward compatible
