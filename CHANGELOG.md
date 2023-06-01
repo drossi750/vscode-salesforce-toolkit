@@ -1,6 +1,10 @@
 # Change Log
 
-## 1.3.0
+## 1.3.3
+
+* Update VS Code Marketplace badge url
+
+## 1.3.2 - not released
 
 * Fix TS update issues
 
