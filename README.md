@@ -1,6 +1,6 @@
 # Visual Studio Code Salesforce Toolkit
 
-[![](https://vsmarketplacebadges.dev/version/drossi750.vscode-salesforce-toolkit.jpg)](https://marketplace.visualstudio.com/items?itemName=drossi750.vscode-salesforce-toolkit) 
+[![](https://vsmarketplacebadge.apphb.com/version/drossi750.vscode-salesforce-toolkit.svg)](https://marketplace.visualstudio.com/items?itemName=drossi750.vscode-salesforce-toolkit) 
 ![GitHub issues](https://img.shields.io/github/issues-raw/drossi750/vscode-salesforce-toolkit)
 
 This extension is designed to support developers with Salesforce DX projects. Provides quick visual access to scratch orgs, sandboxes, and other useful features.
@@ -15,7 +15,7 @@ The icon will appear if the workspace contains the Salesforce's DX project `forc
 Shows the Orgs (Dev Hubs, Sandboxes and Scratch Orgs) with different icon colors depending on the type.
 On mouse hover, there are quick actions available (Open, Setup, Delete, Set as default)
 
-![Org Explorer](./resources/org_explorer.gif)
+![Org Explorer](./resources/images/org_explorer.gif)
 
 Color code:
 * Blue = Dev Hub
@@ -29,7 +29,7 @@ ___
 
 Clicking on an org from the Org Explorer, opens a practical all-in-one Info Panel for the org selected.
 
-![Org Info Panel](./resources/org_info_panel.gif)
+![Org Info Panel](./resources/images/org_info_panel.gif)
 
 Info & Actions available:
 * Quick view for Org Id, Release, API Version, Type and username
@@ -49,11 +49,11 @@ ___
 
 After performing source push or pull operations, clicking on the "Show Results" button of the notification
 
-![Notification](./resources/notification.png)
+![Notification](./resources/images/notification.png)
 
 You will access a page with the output of the DX command, in JSON.
 
-![Results Viewer Panel](./resources/results-viewer.png)
+![Results Viewer Panel](./resources/images/results-viewer.png)
 
 ___
 

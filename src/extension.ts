@@ -144,7 +144,7 @@ function createScratch(): (...args: any[]) => any {
 				title: `Creating Scratch Org from config/${configFile}`,
 				cancellable: true
 			}, (_progress, _token) => {
-				var p = new Promise<void>(resolve => {
+				var p = new Promise(resolve => {
 					cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
 						if (err) {
 							let errorStatus: ErrorStatus = JSON.parse(stderr);
@@ -230,7 +230,7 @@ export async function executeDeployment(orgInfo: OrgInfo, testOnly: boolean): Pr
 			title: operationTitle,
 			cancellable: false
 		}, (_progress, _token) => {
-			var p = new Promise<void>(resolve => {
+			var p = new Promise(resolve => {
 				utilities.loggingChannel.appendLine(`Executing RunLocalTests on org ${orgInfo.orgId} with user ${orgInfo.username}`);
 				_progress.report({ message: `Executing ${testOnly ? 'Unit Test' : 'Deployment'}...` });
 				let cp = require('child_process');

@@ -20,11 +20,11 @@ import * as path from 'path';
 import * as utilities from './utilities';
 import { ErrorStatus, OrgInfo, OrgListResult } from "./interfaces";
 
-const hubIcon = '../resources/org.png';
-const sbxIcon = '../resources/sbx.png';
-const scratchIcon = '../resources/scratch-ok.png';
-const scratchExpiredIcon = '../resources/scratch-ko.png';
-const scratchDefaultIcon = '../resources/scratch-default.png';
+const hubIcon = '../resources/images/org.png';
+const sbxIcon = '../resources/images/sbx.png';
+const scratchIcon = '../resources/images/scratch-ok.png';
+const scratchExpiredIcon = '../resources/images/scratch-ko.png';
+const scratchDefaultIcon = '../resources/images/scratch-default.png';
 
 /**
  * Data provider for the Connected Orgs Treeview
@@ -193,12 +193,19 @@ export class Org extends vscode.TreeItem {
     ) {
         super(orgInfo.alias, vscode.TreeItemCollapsibleState.None);
         this.alias = orgInfo.alias;
-        this.tooltip = orgInfo.alias;
         this.mediaPath = mediaPath;
         this.username = orgInfo.username;
-        this.description = (this.isDefault && this.contextValue === 'devhub.selected' ? Org.STAR_MARKER + ' ' : '') + `[${this.username}]`;
     }
-    
+
+    get tooltip(): string {
+        return `${this.alias}`;
+    }
+
+    get description(): string {
+        return (this.isDefault && this.contextValue === 'devhub.selected' ? Org.STAR_MARKER + ' ' : '') + `[${this.username}]`;
+        //return (this.isDefault && this.contextValue === 'devhub.selected' ? Org.STAR_MARKER + ' ' : '') + `[email@example.com]`;
+    }
+
     updateContextValue(): void {
         let context;
         switch (this.type) {

@@ -1,18 +1,5 @@
 # Change Log
 
-## 1.3.3
-
-* Update VS Code Marketplace badge url
-
-## 1.3.2 - not released
-
-* Fix TS update issues
-
-## 1.3.1 - not released
-
-* Dependabot bumps
-* Other dependencies updates, backward compatible
-
 ## 1.3.0
 
 * Dependabot bumps

@@ -12,7 +12,7 @@
 		"type": "git",
 		"url": "https://github.com/drossi750/vscode-salesforce-toolkit.git"
 	},
-	"icon": "resources/cloud-computing.png",
+	"icon": "resources/images/cloud-computing.png",
 	"galleryBanner": {
 		"color": "#007acc",
 		"theme": "dark"
@@ -35,8 +35,8 @@
 				"title": "New",
 				"view": "org-explorer",
 				"icon": {
-					"light": "resources/plus.png",
-					"dark": "resources/plus.png"
+					"light": "resources/images/plus.png",
+					"dark": "resources/images/plus.png"
 				}
 			},
 			{
@@ -44,8 +44,8 @@
 				"title": "Refresh",
 				"view": "org-explorer",
 				"icon": {
-					"light": "resources/refresh.png",
-					"dark": "resources/refresh.png"
+					"light": "resources/images/refresh.png",
+					"dark": "resources/images/refresh.png"
 				}
 			},
 			{
@@ -61,8 +61,8 @@
 				"view": "org-explorer",
 				"title": "Select DevHub",
 				"icon": {
-					"light": "resources/star.png",
-					"dark": "resources/star.png"
+					"light": "resources/images/star.png",
+					"dark": "resources/images/star.png"
 				}
 			},
 			{
@@ -70,8 +70,8 @@
 				"view": "org-explorer",
 				"title": "Select Scratch Org",
 				"icon": {
-					"light": "resources/star.png",
-					"dark": "resources/star.png"
+					"light": "resources/images/star.png",
+					"dark": "resources/images/star.png"
 				}
 			},
 			{
@@ -79,8 +79,8 @@
 				"view": "org-explorer",
 				"title": "Open Org in the default browser",
 				"icon": {
-					"light": "resources/open.png",
-					"dark": "resources/open.png"
+					"light": "resources/images/open.png",
+					"dark": "resources/images/open.png"
 				}
 			},
 			{
@@ -88,8 +88,8 @@
 				"view": "org-explorer",
 				"title": "Open Org Setup in the default browser",
 				"icon": {
-					"light": "resources/gear.png",
-					"dark": "resources/gear.png"
+					"light": "resources/images/gear.png",
+					"dark": "resources/images/gear.png"
 				}
 			},
 			{
@@ -97,8 +97,8 @@
 				"view": "org-explorer",
 				"title": "Delete",
 				"icon": {
-					"light": "resources/delete.png",
-					"dark": "resources/delete.png"
+					"light": "resources/images/delete.png",
+					"dark": "resources/images/delete.png"
 				}
 			},
 			{
@@ -111,7 +111,7 @@
 				{
 					"id": "org-explorer",
 					"title": "Explorer",
-					"icon": "resources/logo.png"
+					"icon": "resources/images/logo.png"
 				}
 			]
 		},

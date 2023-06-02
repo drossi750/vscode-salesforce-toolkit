@@ -65,7 +65,7 @@ export async function run(): Promise<void> {
     files.forEach(f => runner.addFile(path.resolve(testsRoot, f)));
 
     try {
-        await new Promise<void>((resolve, reject) =>
+        await new Promise((resolve, reject) =>
             runner.run(failures =>
                 failures ? reject(new Error(`${failures} tests failed`)) : resolve(),
             ),
