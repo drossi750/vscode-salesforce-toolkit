@@ -20,11 +20,11 @@ import * as path from 'path';
 import * as utilities from './utilities';
 import { ErrorStatus, OrgInfo, OrgListResult } from "./interfaces";
 
-const hubIcon = '../resources/org.png';
-const sbxIcon = '../resources/sbx.png';
-const scratchIcon = '../resources/scratch-ok.png';
-const scratchExpiredIcon = '../resources/scratch-ko.png';
-const scratchDefaultIcon = '../resources/scratch-default.png';
+const hubIcon = '../resources/images/org.png';
+const sbxIcon = '../resources/images/sbx.png';
+const scratchIcon = '../resources/images/scratch-ok.png';
+const scratchExpiredIcon = '../resources/images/scratch-ko.png';
+const scratchDefaultIcon = '../resources/images/scratch-default.png';
 
 /**
  * Data provider for the Connected Orgs Treeview
