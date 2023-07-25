@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.3.4
+
+* Optimisation of PNG image file sizes
+
 ## 1.3.3
 
 * Update VS Code Marketplace badge url
