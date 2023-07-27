@@ -16,8 +16,8 @@
 // along with vscode-salesforce-toolkit.  If not, see <http://www.gnu.org/licenses/>.
 
 import * as vscode from 'vscode';
-import { readFileSync } from 'fs';
-import { ResultsPanel } from './resultspanel';
+import {readFileSync} from 'fs';
+import {ResultsPanel} from './resultspanel';
 
 // Extension id
 export const extensionId = 'drossi750.vscode-salesforce-toolkit';
@@ -51,11 +51,10 @@ export function loadFromTemplate(templateFile: string, _varWrapper: any): string
  * Prompt for user input
  */
 export async function promptUserInput(placeHolder: string) {
-    const result = await vscode.window.showInputBox({
+    return vscode.window.showInputBox({
         value: '',
         placeHolder: placeHolder
     });
-    return result;
 }
 
 /**
@@ -68,7 +67,6 @@ export async function promptAndShowErrorLog(text: string) {
     }
 }
 
-
 /**
  * Show an Error message and asks to the user if to show the Results panel.
  */
@@ -78,7 +76,6 @@ export async function promptAndShowErrorResultsPanel(text: string, operation: st
         ResultsPanel.createOrShow(operation, results);
     }
 }
-
 
 /**
  * Show an Information message and asks to the user if to show the application log.
