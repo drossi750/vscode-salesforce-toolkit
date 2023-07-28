@@ -193,9 +193,6 @@ async function purgeOrphanedScratchOrgs() {
                         vscode.window.showErrorMessage(errorStatus.message);
                         utilities.loggingChannel.appendLine(errorStatus.message);
                     } else {
-                        //command = `sfdx force:data:record:delete -u ${devHub.username} -s ScratchOrgInfo -i ${}"`;
-                        //let result: OrgListResult = JSON.parse(stdout);
-                        //loggingChannel.appendLine('' + result.status);
                         utilities.loggingChannel.appendLine('' + stdout);
                     }
                 });
@@ -233,7 +230,7 @@ export async function executeDeployment(orgInfo: OrgInfo, testOnly: boolean): Pr
                 _progress.report({message: `Executing ${testOnly ? 'Unit Test' : 'Deployment'}...`});
                 let cp = require('child_process');
                 const packageDirectory = utilities.getDefaultPackageDirectory();
-                let command = `sfdx force:source:deploy -p ${packageDirectory} -l RunLocalTests -u ${orgInfo.username} ${testOnly ? '-c' : ''} -w 90 --loglevel=trace --json`;
+                let command = `sf project deploy start -d ${packageDirectory} -l RunLocalTests -o ${orgInfo.username} ${testOnly ? '-c' : ''} -w 90 --json`;
                 utilities.loggingChannel.appendLine(command);
                 cp.exec(command, (err: string, stdout: string, stderr: string) => {
                     if (err) {
