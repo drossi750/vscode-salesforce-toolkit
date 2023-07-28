@@ -88,7 +88,7 @@ export class OrgDataProvider implements vscode.TreeDataProvider<Org> {
     populateOrgList(): void {
         const cp = require('child_process');
         const showExpired = vscode.workspace.getConfiguration().get('sftk.showExpiredScratchOrgs');
-        let command = `sfdx force:org:list ${showExpired ? '--all' : ''} --json`;
+        let command = `sf org list ${showExpired ? '--all' : ''} --json`;
         let mediaPath = path.join(this.extensionPath, 'dist');
         utilities.loggingChannel.appendLine(command);
         let iconBuilder: IconBuilder = new IconBuilder(mediaPath);
