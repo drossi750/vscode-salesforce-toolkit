@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with vscode-salesforce-toolkit.  If not, see <http://www.gnu.org/licenses/>.
 
-import * as vscode from 'vscode';
+const vscode = acquireVsCodeApi();
 
 window.addEventListener('message', event => {
     const message = event.data;
