@@ -137,7 +137,7 @@ function createScratch(): (...args: any[]) => any {
                 return;
             }
             let cp = require('child_process');
-            const command = `sfdx force:org:create -f config/${configFile} --setalias ${alias} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal --wait ${timeout}`;
+            const command = `sf org create scratch -f config/${configFile} -a ${alias} -y ${durationDays} --json -w ${timeout}`;
             utilities.loggingChannel.appendLine(command);
 
             vscode.window.withProgress({
