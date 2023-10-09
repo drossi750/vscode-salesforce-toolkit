@@ -18,8 +18,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as utilities from './utilities';
-import { getExtensionPath } from './extension';
-import { getContext } from './extension';
+import {getExtensionPath} from './extension';
+import {getContext} from './extension';
 
 /**
  * Manages Results webpanels
@@ -31,8 +31,8 @@ export class ResultsPanel {
     private _disposables: vscode.Disposable[] = [];
 
     /**
-     * Entry point for instantiation 
-     * 
+     * Entry point for instantiation
+     *
      * @param operation the operation for which to show results
      * @param results the results (JSON) to render in the view
      */
@@ -60,8 +60,8 @@ export class ResultsPanel {
 
     /**
      * Private constructor. Instantiation through static createOrShow() method.
-     * 
-     * @param panel 
+     *
+     * @param panel
      * @param operation the operation for which to show results
      * @param results the results (JSON) to render in the view
      */
@@ -114,7 +114,7 @@ export class ResultsPanel {
 
     /**
      * Process and return the html to be rendered in the webview
-     * 
+     *
      * @param webview Used to generate URIs for static resources
      * @param operation the operation for which to show results
      * @param results the results (JSON) to render in the view
