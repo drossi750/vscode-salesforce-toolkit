@@ -18,7 +18,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as utilities from './utilities';
-import { ErrorStatus, OrgInfo, OrgListResult } from "./interfaces";
+import {ErrorStatus, OrgInfo, OrgListResult} from "./interfaces";
 
 const hubIcon = '../resources/org.png';
 const sbxIcon = '../resources/sbx.png';
@@ -36,7 +36,7 @@ export class OrgDataProvider implements vscode.TreeDataProvider<Org> {
     private orgList: Org[] = [];
     private defaultDevHub: Org | undefined = undefined;
 
-    constructor(private workspaceRoot: string, private extensionPath: string) {
+    constructor(private workspaceRoot: string, private readonly extensionPath: string) {
         this.extensionPath = extensionPath;
         this.populateOrgList();
     }
@@ -161,10 +161,9 @@ export class OrgDataProvider implements vscode.TreeDataProvider<Org> {
      */
     getOrgByAlias(alias: string): Org | undefined {
         let allOrgs = this.scratchOrgs.concat(this.orgList);
-        let orgByAlias: Org | undefined = allOrgs.find(s => {
+        return allOrgs.find(s => {
             return alias !== undefined && s.alias === alias;
         });
-        return orgByAlias;
     }
 
     /**
@@ -173,10 +172,9 @@ export class OrgDataProvider implements vscode.TreeDataProvider<Org> {
      */
     getOrgByUsername(username: string): Org | undefined {
         let allOrgs = this.scratchOrgs.concat(this.orgList);
-        let orgByUsername: Org | undefined = allOrgs.find(s => {
+        return allOrgs.find(s => {
             return s.username === username;
         });
-        return orgByUsername;
     }
 }
 

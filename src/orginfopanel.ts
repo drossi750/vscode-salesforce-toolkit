@@ -445,7 +445,7 @@ export class OrgInfoPanel {
     /**
      * Generates the access link using the session id. When done, posts the callback message to the webview for rendering.
      */
-    private generateAndShowAccessLink() {
+    private async generateAndShowAccessLink() {
         let cp = require('child_process');
         let command = `sfdx force:user:display -u ${this._orgInfo.username} --json`;
         utilities.loggingChannel.appendLine(command);

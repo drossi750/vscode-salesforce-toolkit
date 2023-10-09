@@ -17,8 +17,8 @@
 
 import * as vscode from 'vscode';
 import * as utilities from './utilities';
-import {OrgDataProvider, Org} from './orgdataprovider';
-import {ErrorStatus, OrgListResult, OrgInfo, DeploymentResult} from './interfaces';
+import {Org, OrgDataProvider} from './orgdataprovider';
+import {DeploymentResult, ErrorStatus, OrgInfo, OrgListResult} from './interfaces';
 import {OrgInfoPanel} from './orginfopanel';
 
 export var _extensionPath: string;
@@ -150,7 +150,6 @@ function createScratch(): (...args: any[]) => any {
                         if (err) {
                             let errorStatus: ErrorStatus = JSON.parse(stderr);
                             utilities.loggingChannel.appendLine(errorStatus.message);
-                            // purgeOrphanedScratchOrgs();
                             resolve();
                             utilities.promptAndShowErrorLog("Error during Scratch Org creation.");
                         } else {
@@ -264,9 +263,9 @@ async function deleteScratch(org: Org): Promise<void> {
     if (userChoice === 'Delete') {
         utilities.loggingChannel.appendLine(`Deleted ${org.username}`);
         let cp = require('child_process');
-        const command = `sfdx force:org:delete -u ${org.username} -p --json`;
+        const command = `sf org delete scratch --target-org ${org.username} -p --json`;
         utilities.loggingChannel.appendLine(command);
-        orgDataProvider.removeFromTree(org);
+        await orgDataProvider.removeFromTree(org);
         await cp.exec(command, {cwd: utilities.getWorkspaceRoot()}, (err: string, _stdout: string, stderr: string) => {
             if (err) {
                 vscode.window.showErrorMessage(`Error during deletion of Scratch Org '${org.username}'.`);
@@ -345,7 +344,7 @@ export async function setScratch(org: Org): Promise<void> {
     let cp = require('child_process');
     const command = `sfdx force:config:set defaultusername=${org.alias ? org.alias : org.username}`;
     utilities.loggingChannel.appendLine(command);
-    orgDataProvider.setNewDefault(org);
+    await orgDataProvider.setNewDefault(org);
     await cp.exec(command, {cwd: utilities.getWorkspaceRoot()}, (err: string, stdout: string, stderr: string) => {
         if (err) {
             vscode.window.showErrorMessage(`Error setting default scratch org '${org.username}'.`);
@@ -363,7 +362,7 @@ async function setDevHub(org: Org): Promise<void> {
     let cp = require('child_process');
     const command = `sfdx force:config:set defaultdevhubusername=${org.alias ? org.alias : org.username}`;
     utilities.loggingChannel.appendLine(command);
-    orgDataProvider.setNewDefault(org);
+    await orgDataProvider.setNewDefault(org);
     await cp.exec(command, {cwd: utilities.getWorkspaceRoot()}, (err: string, stdout: string, stderr: string) => {
         if (err) {
             vscode.window.showErrorMessage(`Error setting default dev hub '${org.username}'.`);
