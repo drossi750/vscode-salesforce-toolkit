@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.3.6
+
+* Update with new cli binary 'sf'
+* Dependabot bumps
+* Code refactoring and cleanup
+
+## 1.3.5
+
+* Realign Marketplace version numbering
+
 ## 1.3.4
 
 * Optimisation of PNG image file sizes
