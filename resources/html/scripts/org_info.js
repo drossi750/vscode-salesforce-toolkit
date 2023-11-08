@@ -42,12 +42,12 @@ window.addEventListener('message', event => {
 });
 
 function executeCommand(cmd) {
-    vscode.postMessage({ command: cmd });
+    vscode.postMessage({command: cmd});
 }
 
 function showAccessToken() {
     document.querySelector('#accessToken').classList.remove('hidden');
-    document.querySelector('#showTokenButton').classList.add('hidden');;
+    document.querySelector('#showTokenButton').classList.add('hidden');
 }
 
 function retrieveAccessLink() {
@@ -59,24 +59,24 @@ function retrieveAccessLink() {
 }
 
 function copyToClipboard(elementSelector) {
-    var textArea = document.querySelector(elementSelector);
+    let textArea = document.querySelector(elementSelector);
     textArea.select();
     document.execCommand("copy");
 }
 
 function setAlias() {
-    var alias = document.querySelector('#orgAlias').value;
+    let alias = document.querySelector('#orgAlias').value;
     alias = alias.replace(/[^A-Za-z0-9-]/g, "_");
     document.querySelector('#orgAlias').value = alias;
-    vscode.postMessage({ command: 'setAlias', alias: alias });
+    vscode.postMessage({command: 'setAlias', alias: alias});
 }
 
 function executeQuery(queryTextAreaSelector, resultTextAreaSelector) {
-    var query = document.querySelector(queryTextAreaSelector).value;
-    var limit = document.querySelector('#queryLimit').value;
-    var outputFormat = document.querySelector('input[name="queryOutput"]:checked').value;
+    let query = document.querySelector(queryTextAreaSelector).value;
+    let limit = document.querySelector('#queryLimit').value;
+    let outputFormat = document.querySelector('input[name="queryOutput"]:checked').value;
     document.querySelector(resultTextAreaSelector).value = 'Executing query...';
-    vscode.postMessage({ command: 'query', soql: query, limit: limit, format: outputFormat });
+    vscode.postMessage({command: 'query', soql: query, limit: limit, format: outputFormat});
 }
 
 function showRestBody() {
@@ -92,9 +92,9 @@ function hideRestBody() {
 function executeRestCall() {
     document.querySelector('#restResultsLabel').classList.remove('hidden');
     document.querySelector('#restResults').innerHTML = '<span class="inline-block loader">Loading...</span>';
-    var relativeUrl = document.querySelector("#restCallUrl").value;
-    var method = document.querySelector('input[name="restMethod"]:checked').value;
-    vscode.postMessage({ command: 'restCall', url: relativeUrl, method: method });
+    let relativeUrl = document.querySelector("#restCallUrl").value;
+    let method = document.querySelector('input[name="restMethod"]:checked').value;
+    vscode.postMessage({command: 'restCall', url: relativeUrl, method: method});
 }
 
 function clearRestResults() {

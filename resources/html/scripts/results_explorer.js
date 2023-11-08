@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with vscode-salesforce-toolkit.  If not, see <http://www.gnu.org/licenses/>.
 
-const vscode = acquireVsCodeApi();
+import * as vscode from 'vscode';
 
 window.addEventListener('message', event => {
     const message = event.data;
@@ -31,13 +31,5 @@ window.addEventListener('message', event => {
 });
 
 function executeCommand(cmd) {
-    vscode.postMessage({ command: cmd });
+    vscode.postMessage({command: cmd});
 }
-
-/*
-renderjson.set_show_to_level(2);
-var results = document.querySelector('#results').innerHTML;
-document.getElementById('rendered').appendChild(
-    renderjson(results)
-);
-*/
