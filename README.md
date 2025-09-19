@@ -6,7 +6,7 @@
 This extension is designed to support developers with Salesforce DX projects. Provides quick visual access to scratch orgs, sandboxes, and other useful features.
 The icon will appear if the workspace contains the Salesforce's DX project `force-app/` directory.
 
-**Note:** Requires [SFDX CLI](https://developer.salesforce.com/tools/sfdxcli) installed.
+**Note:** Requires [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli) installed.
 
 # Main Features
 
