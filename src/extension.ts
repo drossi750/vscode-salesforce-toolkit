@@ -170,7 +170,7 @@ function createScratch(): (...args: any[]) => any {
 }
 
 /**
- * Deletes the ScratchOrgInfo entries for the given user, which are not retrieved with the sfdx force:org:list command.
+ * Deletes the ScratchOrgInfo entries for the given user, which are not retrieved with the sf org list command.
  * NOTE: if a developer uses two different machines to create scratch orgs, this will delete orgs used in the other machine!
  * May be mitigated by introducing an additional check on last used day (e.g. delete only those older than 3 days or so).
  *
@@ -184,7 +184,7 @@ async function purgeOrphanedScratchOrgs() {
             const devHub = orgDataProvider.getDefaultDevHub();
             if (devHub) {
                 const cp = require('child_process');
-                let command = `sfdx force:data:soql:query  -u ${devHub.username} -q "SELECT Id,LoginUrl,SignupUsername FROM ScratchOrgInfo WHERE Status != 'Deleted' AND SignupEmail = ${devHub.username}" --json`;
+                let command = `sf data query -o ${devHub.username} -q "SELECT Id,LoginUrl,SignupUsername FROM ScratchOrgInfo WHERE Status != 'Deleted' AND SignupEmail = ${devHub.username}" --json`;
                 utilities.loggingChannel.appendLine(command);
                 await cp.exec(command, {cwd: utilities.getWorkspaceRoot()}, (err: string, stdout: string, stderr: string) => {
                     if (err) {
@@ -286,7 +286,7 @@ function purgeScratchOrgs(): (...args: any[]) => any {
         let userChoice: string | undefined = await vscode.window.showWarningMessage(`This action will disconnect the scratch orgs marked as expired. Do you want to proceed?`, {modal: true}, 'Yes');
         if (userChoice === 'Yes') {
             let cp = require('child_process');
-            const command = `sfdx force:org:list --clean -p --json`;
+            const command = `sf org list --clean --json`;
             utilities.loggingChannel.appendLine(command);
             await cp.exec(command, {cwd: utilities.getWorkspaceRoot()}, (err: string, _stdout: string, stderr: string) => {
                 if (err) {
@@ -307,7 +307,7 @@ function purgeScratchOrgs(): (...args: any[]) => any {
 async function openOrg(org: Org, path?: string): Promise<void> {
     let cp = require('child_process');
     const openPath = path ? `--path ${path}` : '';
-    const command = `sfdx force:org:open -u ${org.username} ${openPath}`;
+    const command = `sf org open -o ${org.username} ${openPath}`;
     utilities.loggingChannel.appendLine(command);
     await cp.exec(command, {cwd: utilities.getWorkspaceRoot()}, (err: string, _stdout: string, stderr: string) => {
         if (err) {
@@ -323,7 +323,7 @@ async function openOrg(org: Org, path?: string): Promise<void> {
  */
 async function logout(org: Org): Promise<void> {
     let cp = require('child_process');
-    const command = `sfdx force:auth:logout -p -u ${org.username}`;
+    const command = `sf org logout --no-prompt --target-org ${org.username}`;
     utilities.loggingChannel.appendLine(command);
     await cp.exec(command, {cwd: utilities.getWorkspaceRoot()}, (err: string, _stdout: string, stderr: string) => {
         if (err) {
@@ -342,7 +342,7 @@ async function logout(org: Org): Promise<void> {
  */
 export async function setScratch(org: Org): Promise<void> {
     let cp = require('child_process');
-    const command = `sfdx force:config:set defaultusername=${org.alias ? org.alias : org.username}`;
+    const command = `sf config set target-org=${org.alias ? org.alias : org.username}`;
     utilities.loggingChannel.appendLine(command);
     await orgDataProvider.setNewDefault(org);
     await cp.exec(command, {cwd: utilities.getWorkspaceRoot()}, (err: string, stdout: string, stderr: string) => {
@@ -360,7 +360,7 @@ export async function setScratch(org: Org): Promise<void> {
  */
 async function setDevHub(org: Org): Promise<void> {
     let cp = require('child_process');
-    const command = `sfdx force:config:set defaultdevhubusername=${org.alias ? org.alias : org.username}`;
+    const command = `sf config set target-dev-hub=${org.alias ? org.alias : org.username}`;
     utilities.loggingChannel.appendLine(command);
     await orgDataProvider.setNewDefault(org);
     await cp.exec(command, {cwd: utilities.getWorkspaceRoot()}, (err: string, stdout: string, stderr: string) => {

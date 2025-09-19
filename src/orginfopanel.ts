@@ -232,7 +232,7 @@ export class OrgInfoPanel {
         }, (_progress, _token) => {
             var p = new Promise<void>(resolve => {
                 let cp = require('child_process');
-                let command = `sfdx force:alias:set ${message.alias}=${this._orgInfo.username}`;
+                let command = `sf alias set ${message.alias}=${this._orgInfo.username}`;
                 utilities.loggingChannel.appendLine(command);
                 cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
                     if (err) {
@@ -273,7 +273,7 @@ export class OrgInfoPanel {
         const request = require('request');
         let url = `${this._orgInfo.instanceUrl}${message.url}`;
         let cp = require('child_process');
-        let command = `sfdx force:user:display -u ${this._orgInfo.username} -v ${this._orgInfo.devHubUsername} --json`;
+        let command = `sf org display -o ${this._orgInfo.username} --verbose --json`;
         utilities.loggingChannel.appendLine(command);
         cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
             if (err) {
@@ -360,8 +360,8 @@ export class OrgInfoPanel {
         }, (_progress, _token) => {
             var p = new Promise<void>(resolve => {
                 let cp = require('child_process');
-                let overwrite = message.overwrite === 'overwrite' ? '--forceoverwrite' : '';
-                let command = `sfdx force:source:pull --loglevel fatal ${overwrite} -u ${this._orgInfo.username} --json`;
+                let ignoreConflicts = message.overwrite === 'overwrite' ? '--ignore-conflicts' : '';
+                let command = `sf project retrieve start ${ignoreConflicts} -o ${this._orgInfo.username} --json`;
                 utilities.loggingChannel.appendLine(command);
                 cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
                     if (err) {
@@ -395,8 +395,8 @@ export class OrgInfoPanel {
         }, (_progress, _token) => {
             var p = new Promise<void>(resolve => {
                 let cp = require('child_process');
-                let overwrite = message.overwrite === 'overwrite' ? '--forceoverwrite' : '';
-                let command = `sfdx force:source:push --loglevel fatal ${overwrite} -u ${this._orgInfo.username} --json`;
+                let overwrite = message.overwrite === 'overwrite' ? '--ignore-conflicts' : '';
+                let command = `sf project deploy start ${overwrite} -o ${this._orgInfo.username} --json`;
                 utilities.loggingChannel.appendLine(command);
                 cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
                     if (err) {
@@ -426,7 +426,8 @@ export class OrgInfoPanel {
      */
     private executeQueryAndShowResults(message: any) {
         let cp = require('child_process');
-        let command = `sfdx force:data:soql:query -u ${this._orgInfo.username} -r ${message.format} -q "${message.soql} LIMIT ${message.limit}"`;
+        let resultFormat = message.format === 'human' ? 'human' : message.format; // passthrough
+        let command = `sf data query -o ${this._orgInfo.username} -q "${message.soql} LIMIT ${message.limit}" -r ${resultFormat}`;
         utilities.loggingChannel.appendLine(command);
         cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
             if (err) {
@@ -447,7 +448,7 @@ export class OrgInfoPanel {
      */
     private async generateAndShowAccessLink() {
         let cp = require('child_process');
-        let command = `sfdx force:user:display -u ${this._orgInfo.username} --json`;
+        let command = `sf org display -o ${this._orgInfo.username} --verbose --json`;
         utilities.loggingChannel.appendLine(command);
         cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, stdout: string, stderr: string) => {
             if (err) {
