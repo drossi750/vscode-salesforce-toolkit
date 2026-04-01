@@ -273,14 +273,22 @@ suite('OrgDataProvider Test Suite', () => {
         cpExecStub.callsFake(execResult({ status: 0, result: { nonScratchOrgs: [hub1, hub2], scratchOrgs: [] } }));
 
         const provider = new OrgDataProvider('/tmp', '/tmp/ext');
-        await new Promise(r => setTimeout(r, 50));
+        await new Promise(r => setTimeout(r, 100));
         const children = await provider.getChildren();
-        assert.equal(children[0].isDefault, true);
-        assert.equal(children[1].isDefault, false);
+        assert.equal(children.length, 2);
 
-        await provider.setNewDefault(children[1]);
-        assert.equal(children[0].isDefault, false);
-        assert.equal(children[1].isDefault, true);
+        // Find hub1 (default) and hub2 (not default)
+        const defaultHub = children.find(c => c.username === 'hub1@test.com');
+        const otherHub = children.find(c => c.username === 'hub2@test.com');
+        assert.ok(defaultHub, 'hub1 should be in children');
+        assert.ok(otherHub, 'hub2 should be in children');
+        assert.equal(defaultHub!.isDefault, true, 'hub1 should be default');
+        assert.equal(otherHub!.isDefault, false, 'hub2 should not be default');
+
+        // Set hub2 as default
+        await provider.setNewDefault(otherHub!);
+        assert.equal(defaultHub!.isDefault, false, 'hub1 should no longer be default');
+        assert.equal(otherHub!.isDefault, true, 'hub2 should now be default');
     });
 
     // TS-ODP-010: getChildren with no workspace root
