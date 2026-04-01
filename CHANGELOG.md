@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.3.8
+
+* Dependabot bumps (lodash, js-yaml, webpack)
+
 ## 1.3.6
 
 * Update with new cli binary 'sf'
