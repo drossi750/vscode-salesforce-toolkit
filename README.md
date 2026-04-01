@@ -4,7 +4,7 @@
 ![GitHub issues](https://img.shields.io/github/issues-raw/drossi750/vscode-salesforce-toolkit)
 
 This extension is designed to support developers with Salesforce DX projects. Provides quick visual access to scratch orgs, sandboxes, and other useful features.
-The icon will appear if the workspace contains the Salesforce's DX project `force-app/` directory.
+The icon will appear if the workspace contains the Salesforce DX project file `sfdx-project.json`.
 
 **Note:** Requires [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli) installed.
 
