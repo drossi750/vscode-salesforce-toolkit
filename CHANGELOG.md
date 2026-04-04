@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.3.9
+
+* Dependabot bumps (ajv, picomatch)
+* Added full test coverage (72 tests)
+* Updated test infrastructure (@vscode/test-electron)
+
 ## 1.3.8
 
 * Dependabot bumps (lodash, js-yaml, webpack)
