@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.4.0
+
+* Fix #29: Star icon to set default org now visible on already-selected orgs
+* Fix #35: Change Alias now properly removes old alias before setting new one
+* Replaced deprecated `request` package with Node built-in `https` — resolves all known vulnerabilities
+* Removed deprecated `vscode` and `vscode-test` dev dependencies
+* Updated mocha, added npm overrides for transitive dependency security
+
 ## 1.3.9
 
 * Dependabot bumps (ajv, picomatch)
