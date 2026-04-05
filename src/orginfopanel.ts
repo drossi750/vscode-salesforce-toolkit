@@ -223,6 +223,13 @@ export class OrgInfoPanel {
      * @param message JSON message from the webview. Holds the org alias to set.
      */
     private setOrgAlias(message: any) {
+        const oldAlias = this._orgInfo.alias;
+        const newAlias = message.alias;
+
+        if (oldAlias === newAlias) {
+            return;
+        }
+
         const isDefaultScratch = this._orgInfo.defaultMarker === '(U)';
         let currentOrg = getOrgDataProvider().getOrgByUsername(this._orgInfo.username);
         window.withProgress({
@@ -232,31 +239,47 @@ export class OrgInfoPanel {
         }, (_progress, _token) => {
             var p = new Promise<void>(resolve => {
                 let cp = require('child_process');
-                let command = `sf alias set ${message.alias}=${this._orgInfo.username}`;
-                utilities.loggingChannel.appendLine(command);
-                cp.exec(command, { cwd: utilities.getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
-                    if (err) {
-                        vscode.window.showErrorMessage('Error Setting alias. Check debug log.');
-                        utilities.loggingChannel.appendLine(stderr);
-                        resolve();
-                    }
-                    else {
-                        if (isDefaultScratch) {
-                            console.log(`Changing default org to ${message.alias}`);
-                            if (currentOrg) {
-                                currentOrg.alias = message.alias;
-                                setScratch(currentOrg);
+
+                const doSet = () => {
+                    let setCommand = `sf alias set ${newAlias}=${this._orgInfo.username}`;
+                    utilities.loggingChannel.appendLine(setCommand);
+                    cp.exec(setCommand, { cwd: utilities.getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
+                        if (err) {
+                            vscode.window.showErrorMessage('Error setting alias. Check debug log.');
+                            utilities.loggingChannel.appendLine(stderr);
+                            resolve();
+                        } else {
+                            this._orgInfo.alias = newAlias;
+                            if (isDefaultScratch) {
+                                if (currentOrg) {
+                                    currentOrg.alias = newAlias;
+                                    setScratch(currentOrg);
+                                } else {
+                                    vscode.window.showErrorMessage(`Unexpected error: org ${this._orgInfo.username} not found.`);
+                                }
+                            } else {
+                                refreshOrgList();
                             }
-                            else {
-                                vscode.window.showErrorMessage(`Unexpected error: org ${this._orgInfo.username} not found.`);
-                            }
+                            resolve();
                         }
-                        else {
-                            refreshOrgList();
+                    });
+                };
+
+                if (oldAlias) {
+                    let unsetCommand = `sf alias unset ${oldAlias}`;
+                    utilities.loggingChannel.appendLine(unsetCommand);
+                    cp.exec(unsetCommand, { cwd: utilities.getWorkspaceRoot() }, (err: string, _stdout: string, stderr: string) => {
+                        if (err) {
+                            vscode.window.showErrorMessage('Error unsetting old alias. Check debug log.');
+                            utilities.loggingChannel.appendLine(stderr);
+                            resolve();
+                            return;
                         }
-                        resolve();
-                    }
-                });
+                        doSet();
+                    });
+                } else {
+                    doSet();
+                }
             });
             return p;
         });
