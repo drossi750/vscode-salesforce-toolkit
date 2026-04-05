@@ -270,7 +270,6 @@ export class OrgInfoPanel {
      * @param orgname username of the org for which to retrieve the Release Version
      */
     private executeRestCall(message: any) {
-        const request = require('request');
         let url = `${this._orgInfo.instanceUrl}${message.url}`;
         let cp = require('child_process');
         let command = `sf org display -o ${this._orgInfo.username} --verbose --json`;
@@ -287,27 +286,39 @@ export class OrgInfoPanel {
                 let sessionID = detail.result.accessToken;
                 utilities.loggingChannel.appendLine(`Executing REST call ${message.method} - ${url}`);
                 utilities.loggingChannel.appendLine(`OAuth Token: '${sessionID}`);
+                const https = require('https');
+                const urlMod = require('url');
+                const urlObj = urlMod.parse(url);
                 const options = {
-                    url: url,
+                    hostname: urlObj.hostname,
+                    path: urlObj.pathname + urlObj.search,
                     method: message.method,
-                    json: true,
                     headers: {
                         "Authorization": `OAuth ${sessionID}`,
                         "Content-Type": "application/json; charset=UTF-8",
                         "Accept": "application/json"
                     }
                 };
-                request(options, (err: any, _res: any, body: any) => {
-                    if (err) {
-                        utilities.loggingChannel.appendLine(err);
-                        utilities.promptAndShowErrorLog(`REST API call ended with an error.\nCheck output logs.`);
-                        return;
-                    }
-                    // This is necessary because of REST API callbacks which may arrive late, when the panel is closed.
-                    if (!this.panelDisposed) {
-                        this._panel.webview.postMessage({ command: 'showRestCallResults', body: body });
-                    }
+                const req = https.request(options, (res: any) => {
+                    let data = '';
+                    res.on('data', (chunk: string) => { data += chunk; });
+                    res.on('end', () => {
+                        try {
+                            const body = JSON.parse(data);
+                            if (!this.panelDisposed) {
+                                this._panel.webview.postMessage({ command: 'showRestCallResults', body: body });
+                            }
+                        } catch (e) {
+                            utilities.loggingChannel.appendLine(`Error parsing response: ${data}`);
+                            utilities.promptAndShowErrorLog(`REST API call ended with an error.\nCheck output logs.`);
+                        }
+                    });
                 });
+                req.on('error', (e: any) => {
+                    utilities.loggingChannel.appendLine(e);
+                    utilities.promptAndShowErrorLog(`REST API call ended with an error.\nCheck output logs.`);
+                });
+                req.end();
             }
         });
     }
@@ -319,31 +330,43 @@ export class OrgInfoPanel {
      * @param orgname username of the org for which to retrieve the Release Version
      */
     private fetchReleaseVersion(orgname: string) {
-        const request = require('request');
         let url = `${this._orgInfo.instanceUrl}/services/data`;
         utilities.loggingChannel.appendLine(`Executing REST call GET - ${url}`);
+        const https = require('https');
+        const urlMod = require('url');
+        const urlObj = urlMod.parse(url);
         const options = {
-            url: url,
-            json: true,
+            hostname: urlObj.hostname,
+            path: urlObj.pathname + urlObj.search,
+            method: 'GET',
             headers: {
                 "Content-Type": "application/json; charset=UTF-8",
                 "Accept": "application/json"
             }
         };
-        request(options, (err: any, res: any, body: ReleaseVersionResult[]) => {
-            if (err) {
-                utilities.loggingChannel.appendLine(err);
-                utilities.promptAndShowErrorLog(`REST API call to ${orgname} ended with an error.\nCheck output logs.`);
-                return;
-            }
-            let lastVersion = body.reduce(function (a, b) {
-                return (a.version > a.version) ? a : b;
+        const req = https.request(options, (res: any) => {
+            let data = '';
+            res.on('data', (chunk: string) => { data += chunk; });
+            res.on('end', () => {
+                try {
+                    const body: ReleaseVersionResult[] = JSON.parse(data);
+                    let lastVersion = body.reduce(function (a, b) {
+                        return (a.version > b.version) ? a : b;
+                    });
+                    if (!this.panelDisposed) {
+                        this._panel.webview.postMessage({ command: 'setRelease', release: lastVersion.label, apiVersion: lastVersion.version, restUrl: lastVersion.url });
+                    }
+                } catch (e) {
+                    utilities.loggingChannel.appendLine(`Error parsing response: ${data}`);
+                    utilities.promptAndShowErrorLog(`REST API call to ${orgname} ended with an error.\nCheck output logs.`);
+                }
             });
-            // This is necessary because of REST API callbacks which may arrive late, when the panel is closed.
-            if (!this.panelDisposed) {
-                this._panel.webview.postMessage({ command: 'setRelease', release: lastVersion.label, apiVersion: lastVersion.version, restUrl: lastVersion.url });
-            }
         });
+        req.on('error', (e: any) => {
+            utilities.loggingChannel.appendLine(e);
+            utilities.promptAndShowErrorLog(`REST API call to ${orgname} ended with an error.\nCheck output logs.`);
+        });
+        req.end();
     }
 
     /**

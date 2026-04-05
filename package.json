@@ -194,8 +194,7 @@
 		"test": "mocha out/test/runtest.js -ui tdd"
 	},
 	"dependencies": {
-		"file-loader": "^6.2.0",
-		"request": "^2.88.2"
+		"file-loader": "^6.2.0"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.2.1",
