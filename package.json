@@ -140,7 +140,7 @@
 			"view/item/context": [
 				{
 					"command": "sftk.setScratch",
-					"when": "viewItem == scratch",
+					"when": "viewItem == scratch || viewItem == scratch.selected",
 					"group": "inline"
 				},
 				{
@@ -160,7 +160,7 @@
 				},
 				{
 					"command": "sftk.setDevHub",
-					"when": "viewItem == devhub",
+					"when": "viewItem == devhub || viewItem == devhub.selected",
 					"group": "inline"
 				}
 			]

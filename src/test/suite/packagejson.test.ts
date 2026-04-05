@@ -11,19 +11,21 @@ suite('Package.json Contribution Tests', () => {
     });
 
     // TS-ISS29-009: Verify when clause syntax for setScratch
-    test('setScratch menu — when clause includes scratch context values', () => {
+    test('setScratch menu — visible for both scratch and scratch.selected', () => {
         const menus = packageJson.contributes.menus['view/item/context'];
         const setScratchMenu = menus.find((m: any) => m.command === 'sftk.setScratch');
         assert.ok(setScratchMenu, 'sftk.setScratch should be in view/item/context menus');
-        assert.ok(setScratchMenu.when.includes('scratch'), 'when clause should include scratch');
+        assert.ok(setScratchMenu.when.includes('viewItem == scratch'), 'when clause should match scratch');
+        assert.ok(setScratchMenu.when.includes('viewItem == scratch.selected'), 'when clause should match scratch.selected');
     });
 
-    // TS-ISS29-009: Verify when clause syntax for setDevHub
-    test('setDevHub menu — when clause includes devhub context values', () => {
+    // TS-ISS29-003 / TS-ISS29-004: Star visible for both devhub and devhub.selected
+    test('setDevHub menu — visible for both devhub and devhub.selected', () => {
         const menus = packageJson.contributes.menus['view/item/context'];
         const setDevHubMenu = menus.find((m: any) => m.command === 'sftk.setDevHub');
         assert.ok(setDevHubMenu, 'sftk.setDevHub should be in view/item/context menus');
-        assert.ok(setDevHubMenu.when.includes('devhub'), 'when clause should include devhub');
+        assert.ok(setDevHubMenu.when.includes('viewItem == devhub'), 'when clause should match devhub');
+        assert.ok(setDevHubMenu.when.includes('viewItem == devhub.selected'), 'when clause should match devhub.selected');
     });
 
     // TS-ISS29-008: Sandbox orgs have no set-default action
