@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.4.1
+
+* Dependabot bump (fast-uri 3.1.0 → 3.1.2)
+
 ## 1.4.0
 
 * Fix #29: Star icon to set default org now visible on already-selected orgs
