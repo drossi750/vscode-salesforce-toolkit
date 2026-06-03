@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.4.2
+
+* Fix uuid vulnerability (GHSA-w5hq-g745-h8pq) — override uuid to 11.1.1
+
 ## 1.4.1
 
 * Dependabot bump (fast-uri 3.1.0 → 3.1.2)
