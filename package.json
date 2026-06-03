@@ -17,7 +17,7 @@
 		"color": "#007acc",
 		"theme": "dark"
 	},
-	"version": "1.4.1",
+	"version": "1.4.2",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
@@ -225,6 +225,7 @@
 	},
 	"overrides": {
 		"serialize-javascript": "7.0.5",
-		"diff": "8.0.4"
+		"diff": "8.0.4",
+		"uuid": "11.1.1"
 	}
 }
