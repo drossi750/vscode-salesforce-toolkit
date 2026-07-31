@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.4.3
+
+* Fix all GitHub security advisories:
+  - @babel/core: arbitrary file read via sourceMappingURL (GHSA-4x5r-pxfx-6jf8)
+  - brace-expansion: DoS via exponential-time expansion (GHSA-3jxr-9vmj-r5cp, GHSA-mh99-v99m-4gvg)
+  - fast-uri: host confusion vulnerabilities (GHSA-v2hh-gcrm-f6hx, GHSA-4c8g-83qw-93j6)
+  - js-yaml: quadratic DoS in merge key handling (GHSA-h67p-54hq-rp68, GHSA-52cp-r559-cp3m)
+* Removed deprecated `tslint` dependency
+* Upgraded `glob` to v11 with updated test runner
+* Added brace-expansion override to 5.0.9 for transitive dependencies
+
 ## 1.4.2
 
 * Fix uuid vulnerability (GHSA-w5hq-g745-h8pq) — override uuid to 11.1.1
