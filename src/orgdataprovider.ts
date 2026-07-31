@@ -30,8 +30,8 @@ const scratchDefaultIcon = '../resources/scratch-default.png';
  * Data provider for the Connected Orgs Treeview
  */
 export class OrgDataProvider implements vscode.TreeDataProvider<Org> {
-    private _onDidChangeTreeData: vscode.EventEmitter<Org> = new vscode.EventEmitter<Org>();
-    readonly onDidChangeTreeData: vscode.Event<Org> = this._onDidChangeTreeData.event;
+    private _onDidChangeTreeData: vscode.EventEmitter<Org | undefined> = new vscode.EventEmitter<Org | undefined>();
+    readonly onDidChangeTreeData: vscode.Event<Org | undefined> = this._onDidChangeTreeData.event;
     private scratchOrgs: Org[] = [];
     private orgList: Org[] = [];
     private defaultDevHub: Org | undefined = undefined;
@@ -42,7 +42,7 @@ export class OrgDataProvider implements vscode.TreeDataProvider<Org> {
     }
 
     refresh(): void {
-        this._onDidChangeTreeData.fire();
+        this._onDidChangeTreeData.fire(undefined);
     }
 
     getTreeItem(element: Org): vscode.TreeItem {
